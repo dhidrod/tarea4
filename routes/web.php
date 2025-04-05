@@ -10,27 +10,27 @@
 require_once __DIR__ . "/../../vendor/autoload.php";
 //require_once '../vendor/autoload.php';
 //$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+/*$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 $dbHost = $_ENV['DB_HOST'];
 $dbName = $_ENV['DB_NAME'];
 $dbUser = $_ENV['DB_USER'];
 $dbPass = $_ENV['DB_PASS'];
 ///
-/*
+
 try {
     $dsn = "mysql:host=$dbHost;dbname=$dbName";
     $conex = new PDO($dsn, $dbUser, $dbPass);
     $conex->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo 'Salida (dentro del catch): ';
+    //echo 'Salida (dentro del catch): ';
     var_dump($conex->errorInfo());
     echo 'Salida (dentro del catch): ' . $e->getMessage() . PHP_EOL;
 }
 echo 'Salida (fuera del catch): ';
-var_dump($conex->errorCode());
-var_dump($conex->errorInfo());
-*/
+/*var_dump($conex->errorCode());
+var_dump($conex->errorInfo());*/
+
 
 
 

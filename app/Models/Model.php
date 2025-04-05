@@ -32,7 +32,31 @@ class Model
 
     public function connection()
     {
-        // Conexión a la base de datos, por hacer
+        try {
+
+            if (file_exists(__DIR__ . '/../../../vendor/autoload.php')) {
+                require_once __DIR__ . "/../../../vendor/autoload.php";
+                $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+                $dotenv->load();
+
+
+                $this->db_host = $_ENV['DB_HOST'] ?? $this->db_host;
+                $this->db_name = $_ENV['DB_NAME'] ?? $this->db_name;
+                $this->db_user = $_ENV['DB_USER'] ?? $this->db_user;
+                $this->db_pass = $_ENV['DB_PASS'] ?? $this->db_pass;
+            }
+
+            $dsn = "mysql:host={$this->db_host};dbname={$this->db_name}";
+            $this->connection = new \PDO($dsn, $this->db_user, $this->db_pass);
+            $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->connection->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+
+            // echo 'Salida (fuera del catch): ';
+
+        } catch (\PDOException $e) {
+            echo 'Error de conexión: ' . $e->getMessage();
+            die();
+        }
     }
 
     // QUERY BUILDER
@@ -41,34 +65,25 @@ class Model
     // Recibe la cadena de consulta y la ejecuta
     public function query($sql, $data = [], $params = null)
     {
-
         echo "Consulta: {$sql} <br>"; // borrar, solo para ver ejemplo
         echo "Data: ";
         var_dump($data);
-        echo "Params: ";
-        var_dump($params);
         echo "<br>";
 
-        // Si hay $data se lanzará una consulta preparada, en otro caso una normal
-        // Está configurado para mysqli, cambiar para usar PDO
-        if ($data) {
-            if ($params == null) {
-                // s para string. sssd para 3 strings y un entero. https://www.php.net/manual/es/mysqli-stmt.bind-param.php
-                // por ejemplo: $stmt->bind_param('sssd', $code, $language, $official, $percent);
-                $params = str_repeat('s', count($data));
+        try {
+            if (!empty($data)) {
+                $stmt = $this->connection->prepare($sql);
+                $stmt->execute($data);
+                $this->query = $stmt;
+            } else {
+                $this->query = $this->connection->query($sql);
             }
-            // Sentencia preparada, pasando array como parámetros
-            // Cambiar a PDO
-            $smtp = $this->connection->prepare($sql);
-            $smtp->bind_param($params, ...$data); // con ... el array cambia a variables
-            $smtp->execute();
 
-            $this->query = $smtp->get_result();
-        } else {
-            $this->query = $this->connection->query($sql);
+            return $this;
+        } catch (\PDOException $e) {
+            echo "Error en la consulta: " . $e->getMessage();
+            die();
         }
-
-        return $this;
     }
 
     public function select(...$columns)
@@ -94,7 +109,6 @@ class Model
         if (empty($this->query)) {
             $sql = "SELECT {$this->select} FROM {$this->table}";
 
-            // Se comprueban si están definidos para añadirlos a la cadena $sql
             if ($this->where) {
                 $sql .= " WHERE {$this->where}";
             }
@@ -105,6 +119,13 @@ class Model
 
             $this->query($sql, $this->values);
         }
+
+        // Devolver los resultados
+        if ($this->query instanceof \PDOStatement) {
+            return $this->query->fetchAll();
+        }
+
+        return [];
     }
 
     public function find($id)

@@ -79,7 +79,7 @@ if (isset($_POST['login'])) {
     // mostrar la consulta SQL que se está ejecutando.
 
     // Consulta 
-    //  $usuarioModel->all();
+      $usuarioModel->all();
 
     // Consulta
     //$usuarioModel->select('columna1', 'columna2')->get();
