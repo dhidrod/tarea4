@@ -80,32 +80,58 @@ if (isset($_POST['login'])) {
 
     // Consulta 
         $usuarios = $usuarioModel->all();
-
         // Mostrar los resultados en una tabla
-        if (!empty($usuarios)) {
-            echo "<h3>Lista de usuarios:</h3>";
-            echo "<table border='1'>";
-            echo "<tr>";
-            
-            // Encabezados de la tabla
-            foreach (array_keys($usuarios[0]) as $columna) {
-                echo "<th>$columna</th>";
-            }
-            echo "</tr>";
-            
-            // Datos
-            foreach ($usuarios as $usuario) {
-                echo "<tr>";
-                foreach ($usuario as $valor) {
-                    echo "<td>$valor</td>";
-                }
-                echo "</tr>";
-            }
-            echo "</table>";
-        } else {
-            echo "<p>No hay usuarios en la base de datos.</p>";
-        }
+    ?>
 
+        <h3>Lista de usuarios:</h3>
+        <table border='1'>
+        <tr>
+        <?php
+            if (!empty($usuarios)) {
+                // Encabezados de la tabla
+                foreach (array_keys($usuarios[0]) as $columna) {
+                    echo "<th>$columna</th>";
+                }
+            }
+        ?>
+        </tr>
+        <?php
+            if (!empty($usuarios)) {
+                // Datos
+                foreach ($usuarios as $usuario) {
+                    echo "<tr>";
+                    foreach ($usuario as $valor) {
+                        echo "<td>$valor</td>";
+                    }
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>No hay usuarios en la base de datos.</td></tr>";
+            }
+        ?>
+        </table>
+
+<?php
+/*
+ $_SESSION['DEBUG_POST'] = $_POST; // Guardar en sesión para depuración
+
+        // Ajusta los nombres de los campos según tu formulario
+        $nickname = $_POST['nickname'] ?? ''; // o podría ser 'nombre', 'username', etc.
+        $password = $_POST['password'] ?? ''; // o podría ser 'pass', 'clave', etc.
+
+        $_SESSION['DEBUG_NICKNAME'] = $nickname; // Guardar en sesión para depuración
+        $_SESSION['DEBUG_PASSWORD'] = $password; // Guardar en sesión para depuración
+
+        // Instanciamos el modelo
+        $usuarioModel = new UsuarioModel();
+
+        // Verificamos las credenciales
+        $user = $usuarioModel->checkLogin($nickname, $password);
+
+        // Depuración: verificar qué datos devuelve el modelo
+        $_SESSION['DEBUG_USER'] = $user; // Guardar en sesión para depuración
+
+        */
 
     // Consulta
     //$usuarioModel->select('columna1', 'columna2')->get();
