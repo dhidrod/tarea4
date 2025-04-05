@@ -79,7 +79,33 @@ if (isset($_POST['login'])) {
     // mostrar la consulta SQL que se está ejecutando.
 
     // Consulta 
-      $usuarioModel->all();
+        $usuarios = $usuarioModel->all();
+
+        // Mostrar los resultados en una tabla
+        if (!empty($usuarios)) {
+            echo "<h3>Lista de usuarios:</h3>";
+            echo "<table border='1'>";
+            echo "<tr>";
+            
+            // Encabezados de la tabla
+            foreach (array_keys($usuarios[0]) as $columna) {
+                echo "<th>$columna</th>";
+            }
+            echo "</tr>";
+            
+            // Datos
+            foreach ($usuarios as $usuario) {
+                echo "<tr>";
+                foreach ($usuario as $valor) {
+                    echo "<td>$valor</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        } else {
+            echo "<p>No hay usuarios en la base de datos.</p>";
+        }
+
 
     // Consulta
     //$usuarioModel->select('columna1', 'columna2')->get();

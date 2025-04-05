@@ -100,7 +100,7 @@ class Model
         // La consulta sería
         $sql = "SELECT * FROM {$this->table}";
         // Y se llama a la sentencia
-        $this->query($sql)->get();
+        return $this->query($sql)->get(); // Añadido return
     }
 
     // Consulta base a la que se irán añadiendo partes
