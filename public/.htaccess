@@ -1,0 +1,22 @@
+# Bloquear listado de directorios
+Options -Indexes
+
+# Redireccionar todas las peticiones a index.php
+RewriteEngine On
+
+# Bloquear acceso directo a includes
+RewriteRule ^includes/ - [F,L]
+
+# Si la solicitud no es para un archivo existente
+RewriteCond %{REQUEST_FILENAME} !-f
+# Si la solicitud no es para un directorio existente
+RewriteCond %{REQUEST_FILENAME} !-d
+# Redirigir todo a index.php
+RewriteRule ^ index.php [QSA,L]
+
+# Manejo de errores
+#ErrorDocument 400 /index.php?error=redirect
+#ErrorDocument 401 /index.php?error=redirect
+#ErrorDocument 403 /index.php?error=redirect
+#ErrorDocument 404 /index.php?error=redirect
+#ErrorDocument 500 /index.php?error=redirect
