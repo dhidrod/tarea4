@@ -16,12 +16,12 @@
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Cierre de sesión
-            if (isset($_POST['logout'])) {
+            /*if (isset($_POST['logout'])) {
                 unset($_SESSION["user"]);
                 session_destroy();
                 header("Location: /");
                 exit();
-            }
+            }*/
 
             // Cambio de modo oscuro
             if (isset($_POST['toggle_dark_mode'])) {
@@ -46,7 +46,7 @@
             <div class="user">
                 <p>Bienvenido, <?= $_SESSION['user'] ?></p>
 
-                <form action="inicio" method="post" style="display:inline;">
+                <form action="/logout" method="post" style="display:inline;">
                     <input type="hidden" name="logout" value="1">
                     <input type="submit" value="Cerrar sesión">
                 </form>

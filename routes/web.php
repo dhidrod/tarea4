@@ -50,7 +50,8 @@ Route::get('/usuario/:id', [UsuarioController::class, 'show']);
 Route::post('/usuario', [UsuarioController::class, 'store']);
 
 Route::post('/', [HomeController::class, 'index']);
-Route::post('/login', [HomeController::class, 'index']);
+Route::post('/login', [HomeController::class, 'login']);
+Route::post('/logout', [HomeController::class, 'logout']);
 
 /*Route::get('/contacto', [ContactoController::class, 'index']);
 Route::get('/formulario', [FormularioController::class, 'index']);

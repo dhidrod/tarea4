@@ -1,4 +1,5 @@
 <?php
+/*
 $error = '';
 if (isset($_POST['login'])) {
     $user = isset($_POST['nombre']) ? strtolower($_POST['nombre']) : '';
@@ -9,7 +10,7 @@ if (isset($_POST['login'])) {
             $_SESSION['user'] = $user;
             break;
         }
-    }*/
+    }*//*
     if ($user === "admin" && $password === "1234") {
         $_SESSION['user'] = "admin";
     }
@@ -17,7 +18,7 @@ if (isset($_POST['login'])) {
         $error = 'Usuario o contraseña incorrectos';
     }
 }
-
+*/
 ?>
 
 
@@ -43,14 +44,16 @@ if (isset($_POST['login'])) {
         ?>
         <div class="error">
             <?php
-            if (!empty($error)) {
-                echo "<p>$error</p>";
+            if (isset($_SESSION['error'])) {
+                echo "<p>{$_SESSION['error']}</p>";
+                unset($_SESSION['error']); // Limpiar el error después de mostrarlo
             }
             ?>
         </div>
+
         <div class="error">
             <?php
-            if (isset($errores)) {
+            if (isset($errors)) {
                 foreach ($errores as $clave => $valor) {
                     echo "<br><p>" . $valor . "</p><br>";
                 }
@@ -66,27 +69,28 @@ if (isset($_POST['login'])) {
 
     <p class="header-paragraph">Pruebas de consultas (hacer scroll):</p>
     <?php
-     use app\Models\UsuarioModel; // Recuerda el uso del autoload.php
-     
-     // Se instancia el modelo
-     $usuarioModel = new UsuarioModel();
 
-     // Descomentar consultas para ver la creación. Cuando se lanza execute hay código para
-     // mostrar la consulta SQL que se está ejecutando.
-     
-     // Consulta 
+    use app\Models\UsuarioModel; // Recuerda el uso del autoload.php
+
+    // Se instancia el modelo
+    $usuarioModel = new UsuarioModel();
+
+    // Descomentar consultas para ver la creación. Cuando se lanza execute hay código para
+    // mostrar la consulta SQL que se está ejecutando.
+
+    // Consulta 
     //  $usuarioModel->all();
 
-     // Consulta
-     //$usuarioModel->select('columna1', 'columna2')->get();
+    // Consulta
+    //$usuarioModel->select('columna1', 'columna2')->get();
 
-     // Consulta
+    // Consulta
     //  $usuarioModel->select('columna1', 'columna2')
     //              ->where('columna1', '>', '3')
     //              ->orderBy('columna1', 'DESC')
     //              ->get();
 
-     // Consulta
+    // Consulta
     //  $usuarioModel->select('columna1', 'columna2')
     //              ->where('columna1', '>', '3')
     //              ->where('columna2', 'columna3')
@@ -95,16 +99,16 @@ if (isset($_POST['login'])) {
     //              ->orderBy('columna1', 'DESC')
     //              ->get();
 
-     // Consulta
+    // Consulta
     //  $usuarioModel->create(['id' => 1, 'nombre' => 'nombre1', 'apellidos' => 'apellidos1']);
 
-     // Consulta
-     //$usuarioModel->delete(['id' => 1]);
+    // Consulta
+    //$usuarioModel->delete(['id' => 1]);
 
-     // Consulta
+    // Consulta
     //  $usuarioModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
 
-     echo "Pruebas SQL Query Builder";
+    echo "Pruebas SQL Query Builder";
     ?>
 </body>
 
