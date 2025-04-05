@@ -12,6 +12,11 @@ class HomeController extends Controller
         return $this->view('home'); // Seleccionamos una vista (método padre)
     }
 
+    public function toRegistro()
+    {
+        return $this->view('registro'); // Seleccionamos una vista (método padre)
+    }
+
     // Función para logear al usuario
     /*public function login()
     {
