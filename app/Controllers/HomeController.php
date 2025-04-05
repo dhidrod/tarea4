@@ -14,34 +14,10 @@ class HomeController extends Controller
 
     public function toRegistro()
     {
-        return $this->view('registro'); // Seleccionamos una vista (método padre)
+        return $this->view('usuarios.create'); // Seleccionamos una vista (método padre)
     }
 
     // Función para logear al usuario
-    /*public function login()
-    {
-            $user = isset($_POST['nombre']) ? strtolower($_POST['nombre']) : '';
-            $password = isset($_POST['password']) ? $_POST['password'] : '';
-            // Comprobamos si el usuario y la contraseña coinciden con alguno de los usuarios registrados
-    //foreach ($datos as $dato) {
-    //    if ($dato['nombre'] === $user && password_verify($password, $dato['password'])) {
-    //        $_SESSION['user'] = $user;
-    //        break;
-
-            if ($user === "admin" && $password === "1234") {
-                $_SESSION['user'] = "admin";
-            } else {
-                $_SESSION['error'] = 'Usuario o contraseña incorrectos';
-            }
-        //}
-    //}
-        header("Location: /");
-        //return $this->view('home', ['error' => $error]);
-        
-    }*/
-
-
-
     public function login()
     {
 

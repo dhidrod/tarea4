@@ -56,6 +56,31 @@ class UsuarioController extends Controller
         echo "Borrar usuario";
     }
 
+    public function addUser()
+    {
+        // Iniciar sesión si no está iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Guardar datos del formulario en sesión (para recuperarlos en caso de error)
+        $_SESSION['form_data'] = $_POST;
+
+        // Se instancia el modelo
+        $usuarioModel = new UsuarioModel();
+
+        // Se llama a la función correspondiente, pasando como parámetro $_POST
+        $resultado = $usuarioModel->addUser($_POST);
+
+        if (!$resultado) {
+            // Si hay errores, volver al formulario
+            return $this->redirect('/usuario/nuevo');
+        } else {
+            // Si el registro fue exitoso, redirigir a la página principal
+            return $this->redirect('/');
+        }
+    }
+
     // Función para mostrar como fuciona con ejemplos
     public function pruebasSQLQueryBuilder()
     {
@@ -75,7 +100,7 @@ class UsuarioController extends Controller
         //             ->where('columna3', '!=', 'columna4', 'OR')
         //             ->orderBy('columna1', 'DESC')
         //             ->get();
-        //$usuarioModel->create(['id' => 1, 'nombre' => 'nombre1']);
+        $usuarioModel->create(['id' => 1, 'nombre' => 'nombre1']);
         //$usuarioModel->delete(['id' => 1]);
         //$usuarioModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
 

@@ -12,7 +12,7 @@
             <input type="password" id="password" name="password">
         </div>
         <input type="submit" name="login" value="Iniciar sesión">
-        <a href="registro">Nuevo Usuario</a>
+        <a href="usuario/nuevo">Nuevo Usuario</a>
     </form>
 
 </main>

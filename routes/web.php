@@ -52,7 +52,10 @@ Route::post('/usuario', [UsuarioController::class, 'store']);
 Route::post('/', [HomeController::class, 'index']);
 Route::post('/login', [HomeController::class, 'login']);
 Route::post('/logout', [HomeController::class, 'logout']);
+Route::post('/usuario/create/add', [UsuarioController::class, 'addUser']);
 Route::get('/registro', [HomeController::class, 'toRegistro']);
+//Route::get('/registro', [UsuarioController::class, 'create']);
+
 
 /*Route::get('/contacto', [ContactoController::class, 'index']);
 Route::get('/formulario', [FormularioController::class, 'index']);

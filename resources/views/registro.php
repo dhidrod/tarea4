@@ -135,7 +135,19 @@ if (isset($_POST['login'])) {
 <?php include_once 'head.php'; ?>
 
 <body>
-    <?php include_once 'header.php'; ?>
+    <?php include_once 'header.php'; 
+    /*
+nombre
+apellido1
+apellido2
+nick
+correo
+fecha_nacimiento
+password
+
+INSERT INTO `usuarios` (`nombre`, `apellido1`, `apellido2`, `nick`, `correo`, `fecha_nacimiento`, `password`, `saldo`) VALUES ('nombre', 'apellido1', 'apellido2', 'nick', 'correo', '', 'password', '0');
+    */
+    ?>
 
 
     <div class="cuerpoformulario">
@@ -145,12 +157,22 @@ if (isset($_POST['login'])) {
         </h2>
         <div class="formulario">
             <form action="" method="post" enctype="multipart/form-data">
-                <label for="nombreUsuario">Nombre usuario</label>
-                <input type="text" name="nombreUsuario" id="nombreUsuario">
+                <label for="nombre">Nombre usuario</label>
+                <input type="text" name="nombre" id="nombre">
+                <label for="apellido1">Primer Apellido</label>
+                <input type="text" name="apellido1" id="apellido1">
+                <label for="apellido2">Segundo Apellido</label>
+                <input type="text" name="apellido2" id="apellido2">
+                <label for="nick">Nick (nombre con el que iniciará sesión)</label>
+                <input type="text" name="nick" id="nick">
                 <label for="password">Contraseña</label>
                 <input type="password" name="password" id="password">
                 <label for="password">Repetir contraseña</label>
                 <input type="password" name="password2" id="password2">
+                <label for="correo">Correo</label>
+                <input type="email" name="correo" id="correo">
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento">
                 <input type="submit" value="Enviar">
 
                 <input type="submit" name="generarUsuarios" value="Crear 10 Usuarios Aleatorios">
