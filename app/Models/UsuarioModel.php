@@ -40,7 +40,7 @@ class UsuarioModel extends Model
 
     public function addUser($data)
     {
-        
+
         $errores = [];
 
         // Validar los datos de entrada
@@ -86,7 +86,7 @@ class UsuarioModel extends Model
             $errores[] = 'La fecha de nacimiento no tiene un formato válido<br>';
         }
 
-        
+
         $password = $data['password'] ?? '';
 
         if (!$this->validarDato($password, 'password')) {
@@ -96,7 +96,7 @@ class UsuarioModel extends Model
 
         // Verificar si existe password2 para comparar
         $password2 = $data['password2'] ?? ($data['password_confirm'] ?? '');
-        
+
         // Validar que las contraseñas coincidan
         if ($data['password'] !== $password2) {
             $errores[] = 'Las contraseñas no coinciden<br>';
@@ -143,24 +143,37 @@ class UsuarioModel extends Model
 
 
     public function getUserById($id)
-{
-    // Verificar que el ID sea válido
-    if (!is_numeric($id) || $id <= 0) {
-        return null;
+    {
+        // Verificar que el ID sea válido
+        if (!is_numeric($id) || $id <= 0) {
+            return null;
+        }
+
+        // Primero ejecutamos find() que prepara la consulta
+        $this->find($id);
+        // Luego obtenemos los resultados con get()
+        $result = $this->get();
+
+        // Verificar si se encontró el usuario
+        if (!empty($result) && isset($result[0])) {
+            return $result[0]; // Devolver el usuario encontrado
+        }
+
+        return null; // Devolver null si no hay resultados
     }
-    
-    // Primero ejecutamos find() que prepara la consulta
-    $this->find($id);
-    // Luego obtenemos los resultados con get()
-    $result = $this->get();
-    
-    // Verificar si se encontró el usuario
-    if (!empty($result) && isset($result[0])) {
-        return $result[0]; // Devolver el usuario encontrado
+
+    public function actualizarSaldo($id, $nuevoSaldo)
+    {
+        // Verificar que el ID y el nuevo saldo sean válidos
+        if (!is_numeric($id) || $id <= 0 || !is_numeric($nuevoSaldo)) {
+            return false;
+        }
+
+        // Actualizar el saldo del usuario con el ID proporcionado
+        $this->update($id, ['saldo' => $nuevoSaldo]);
+
+        return true;
     }
-    
-    return null; // Devolver null si no hay resultados
-}
 
     private function validarDato(string $dato, string $tipo): bool
     {

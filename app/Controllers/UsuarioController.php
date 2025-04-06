@@ -81,36 +81,6 @@ class UsuarioController extends Controller
         }
     }
 
-    /*public function panel() // Versión vieja sin ID en la URL
-    {
-        // Iniciar sesión si no está iniciada
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        // Verificar si el usuario está logueado y obtener su ID
-        if (!isset($_SESSION['user_id'])) {
-            $_SESSION["error"] = "Debe iniciar sesión para acceder al panel";
-            return $this->redirect('/');
-        }
-        
-        // Se instancia el modelo
-        $usuarioModel = new UsuarioModel();
-        
-        // Obtener el ID del usuario de la sesión
-        $id = $_SESSION['user_id'];
-        $usuario = $usuarioModel->getUserById($id);
-        
-        // Si no se encontró el usuario, redirigir a la página principal
-        if (!$usuario) {
-            $_SESSION["error"] = "Usuario no encontrado";
-            return $this->redirect('/');
-        } else {
-            // Cargar la vista del panel de usuario con los datos del usuario
-            //return $this->view('usuarios.panel', ['usuario' => $usuario]);
-            return $this->view('usuarios.panel', ['usuario' => $usuario]);
-        }
-    }*/
 
     public function panel($userId = null) // Recibir el ID desde la ruta
     {
@@ -148,6 +118,123 @@ class UsuarioController extends Controller
 
         return $this->view('usuarios.panel', ['usuario' => $usuario]);
     }
+
+    public function toSaldo($userId = null) // Recibir el ID desde la ruta
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Obtener el ID desde la URL si no se pasa como parámetro
+        if ($userId === null) {
+            // Extraer el ID de la URL (ej: "/usuario/2" -> 2)
+            $requestUri = $_SERVER['REQUEST_URI'];
+            $segments = explode('/', $requestUri);
+            $userId = end($segments);
+        }
+
+        // Validar que el ID sea numérico
+        if (!is_numeric($userId)) {
+            $_SESSION["error"] = "ID de usuario inválido";
+            return $this->redirect('/');
+        }
+
+        // Verificar si el usuario de la URL coincide con el de la sesión (seguridad)
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $userId) {
+            $_SESSION["error"] = "No tienes permiso para acceder a este perfil";
+            return $this->redirect('/');
+        }
+
+        $usuarioModel = new UsuarioModel();
+        $usuario = $usuarioModel->getUserById($userId);
+
+        if (!$usuario) {
+            $_SESSION["error"] = "Usuario no encontrado";
+            return $this->redirect('/');
+        }
+
+        return $this->view('usuarios.saldo', ['usuario' => $usuario]);
+    }
+
+    public function getSaldo($id)
+    {
+        $usuarioModel = new UsuarioModel();
+        $usuario = $usuarioModel->getUserById($id);
+
+        if ($usuario && isset($usuario['saldo'])) {
+            return $usuario['saldo'];
+        }
+        return false; // o un mensaje de error
+    }
+
+
+    public function addSaldo($id)
+    {
+        // Verificar que la petición sea POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Convertir la cantidad recibida a un valor numérico
+            $cantidad = floatval($_POST['cantidad']);
+
+            $usuarioModel = new UsuarioModel();
+            $usuario = $usuarioModel->getUserById($id);
+    
+            if (!$usuario) {
+                $_SESSION["error"] = "Usuario no encontrado";
+                return $this->redirect('/');
+            }
+    
+            // Sumar la cantidad al saldo actual
+            $saldoActual = $usuario['saldo'];
+            $nuevoSaldo = $saldoActual + $cantidad;
+    
+            // Actualizar el saldo usando el método del modelo
+            $usuarioModel->actualizarSaldo($id, $nuevoSaldo);
+    
+            // Redirigir al panel de usuario u otra página
+            return $this->redirect('/usuario/' . $id);
+        }
+    
+        // Si no es POST, redirigir o mostrar un error
+        return $this->redirect('/');
+    }
+    
+
+    public function subtractSaldo($id)
+    {
+        // Verificar que la petición sea POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Convertir la cantidad recibida a un valor numérico
+            $cantidad = floatval($_POST['cantidad']);
+
+            $usuarioModel = new UsuarioModel();
+            $usuario = $usuarioModel->getUserById($id);
+    
+            if (!$usuario) {
+                $_SESSION["error"] = "Usuario no encontrado";
+                return $this->redirect('/');
+            }
+    
+            // Sumar la cantidad al saldo actual
+            $saldoActual = $usuario['saldo'];
+            
+            // Verificar que el saldo no sea negativo después de la resta
+            if ($saldoActual - $cantidad < 0) {
+                $_SESSION["error"] = "Saldo insuficiente";
+                return $this->redirect('/usuario/' . $id);
+            }
+            $nuevoSaldo = $saldoActual - $cantidad;
+    
+            // Actualizar el saldo usando el método del modelo
+            $usuarioModel->actualizarSaldo($id, $nuevoSaldo);
+    
+            // Redirigir al panel de usuario u otra página
+            return $this->redirect('/usuario/' . $id);
+        }
+    
+        // Si no es POST, redirigir o mostrar un error
+        return $this->redirect('/');
+    }
+
 
     // Función para mostrar como fuciona con ejemplos
     public function pruebasSQLQueryBuilder()

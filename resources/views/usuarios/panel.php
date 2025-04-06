@@ -4,14 +4,25 @@
 <link rel="stylesheet" href="__DIR__ . '/../../css/style.css">
 
 <body>
+    <?php
+    echo $_SESSION["DEBUG_cantidad"];
+    ?>
     <?php include_once __DIR__ . '/../header.php'; ?>
 
     <div class="cuerpoformulario-big">
         <h1 class="centered">Panel de Usuario</h1>
-
+        <div class="error">
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo "<p>{$_SESSION['error']}</p>";
+                unset($_SESSION['error']); // Limpiar el error después de mostrarlo
+            }
+            ?>
+        </div>
         <?php if (isset($usuario) && !empty($usuario)): ?>
             <div class="tabla-resultados">
                 <h2>Información del Usuario</h2>
+
                 <table>
                     <thead>
                         <tr>
@@ -43,7 +54,7 @@
                 <ul>
                     <a href="/usuario/edit/<?php echo $usuario['id']; ?>">Editar perfil</a>
                     <br>
-                    <a href="/usuario/saldo">Administrar saldo</a>
+                    <a href="/usuario/saldo/<?php echo $usuario['id']; ?>">Administrar saldo</a>
                 </ul>
             </div>
         <?php else: ?>
