@@ -195,6 +195,36 @@ Tarifas.php
     margin: 2rem auto;
 }
 
+.cuerpoformulario-big{
+    background-color: var(--component-bg);
+    padding: 2rem;
+    flex: 1;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary-color);
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.acciones-usuario {
+    background-color: var(--component-bg);
+    padding: 2rem;
+    flex: 1;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary-color);
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+}
+
 .formulario{
     display: flex;
     flex-direction: column;

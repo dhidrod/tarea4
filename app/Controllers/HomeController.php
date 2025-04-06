@@ -17,37 +17,7 @@ class HomeController extends Controller
         return $this->view('usuarios.create'); // Seleccionamos una vista (método padre)
     }
 
-    // Función para logear al usuario
-    /*public function login()
-    {
-
-        $nickname = $_POST['nick'] ?? '';
-        $password = $_POST['password'] ?? '';
-
-        // Instanciamos el modelo
-        $usuarioModel = new UsuarioModel();
-
-        // Verificamos las credenciales
-        $user = $usuarioModel->checkLogin($nickname, $password);
-
-        // Si el usuario existe y la contraseña es correcta
-        if ($user) {
-            // Iniciar sesión si no está iniciada
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-
-            $_SESSION['user'] = $user['nick'];
-
-            // Redirigir a la página principal
-            return $this->redirect('/');
-        } else {
-            // Si las credenciales son incorrectas
-            $_SESSION['error'] = 'Usuario o contraseña incorrectos';
-            return $this->redirect('/');
-        }
-    }*/
-
+    
     public function login()
 {
     $usuarioModel = new UsuarioModel();
