@@ -25,11 +25,11 @@ class UsuarioModel extends Model
 
         // Si encontramos un usuario y la contraseña coincide
         if (!empty($user) && isset($user[0])) {
-            // Si las contraseñas están hasheadas (recomendado)
+            // Si las contraseñas están hasheadas
             if (password_verify($password, $user[0]['password'])) {
                 return $user[0]; // Devuelve los datos del usuario
             }
-            // Si las contraseñas están en texto plano (no recomendado)
+            // Si las contraseñas están en texto plano
             else if ($user[0]['password'] === $password) {
                 return $user[0]; // Devuelve los datos del usuario
             }
@@ -142,6 +142,25 @@ class UsuarioModel extends Model
     }
 
 
+    public function getUserById($id)
+{
+    // Verificar que el ID sea válido
+    if (!is_numeric($id) || $id <= 0) {
+        return null;
+    }
+    
+    // Primero ejecutamos find() que prepara la consulta
+    $this->find($id);
+    // Luego obtenemos los resultados con get()
+    $result = $this->get();
+    
+    // Verificar si se encontró el usuario
+    if (!empty($result) && isset($result[0])) {
+        return $result[0]; // Devolver el usuario encontrado
+    }
+    
+    return null; // Devolver null si no hay resultados
+}
 
     private function validarDato(string $dato, string $tipo): bool
     {

@@ -46,7 +46,9 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/usuario/nuevo', [UsuarioController::class, 'create']);
 Route::get('/usuario', [UsuarioController::class, 'index']);
 Route::get('/usuario/pruebas', [UsuarioController::class, 'pruebasSQLQueryBuilder']);
-Route::get('/usuario/:id', [UsuarioController::class, 'show']);
+Route::get('/usuario/panel', [UsuarioController::class, 'panel']);
+//Route::get('/usuario/:id', [UsuarioController::class, 'show']);
+Route::get('/usuario/:id', [UsuarioController::class, 'panel']);
 Route::post('/usuario', [UsuarioController::class, 'store']);
 
 Route::post('/', [HomeController::class, 'index']);

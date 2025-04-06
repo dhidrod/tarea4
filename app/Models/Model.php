@@ -131,8 +131,8 @@ class Model
     public function find($id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = ?";
-
-        $this->query($sql, [$id], 'i');
+        
+        return $this->query($sql, [$id]); // Añadido return y eliminado el tercer parámetro ya que no se usa.
     }
 
     // Se añade where a la sentencia con operador específico

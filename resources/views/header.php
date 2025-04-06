@@ -55,6 +55,9 @@
                 <form method="post">
                     <input type="submit" name="toggle_dark_mode" value="<?= $dark_mode ? 'Modo Claro' : 'Modo Oscuro' ?>">
                 </form>
+                <br>
+                    <!-- Enlace al panel de usuario -->
+                <a href="/usuario/<?php echo $_SESSION['user_id'] ?>">Panel de Usuario</a>
             </div>
 
             

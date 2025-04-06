@@ -81,6 +81,36 @@ class UsuarioController extends Controller
         }
     }
 
+    public function panel()
+    {
+        // Iniciar sesión si no está iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Verificar si el usuario está logueado y obtener su ID
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION["error"] = "Debe iniciar sesión para acceder al panel";
+            return $this->redirect('/');
+        }
+        
+        // Se instancia el modelo
+        $usuarioModel = new UsuarioModel();
+        
+        // Obtener el ID del usuario de la sesión
+        $id = $_SESSION['user_id'];
+        $usuario = $usuarioModel->getUserById($id);
+        
+        // Si no se encontró el usuario, redirigir a la página principal
+        if (!$usuario) {
+            $_SESSION["error"] = "Usuario no encontrado";
+            return $this->redirect('/');
+        } else {
+            // Cargar la vista del panel de usuario con los datos del usuario
+            return $this->view('usuarios.panel', ['usuario' => $usuario]);
+        }
+    }
+
     // Función para mostrar como fuciona con ejemplos
     public function pruebasSQLQueryBuilder()
     {

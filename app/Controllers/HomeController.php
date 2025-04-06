@@ -18,12 +18,11 @@ class HomeController extends Controller
     }
 
     // Función para logear al usuario
-    public function login()
+    /*public function login()
     {
 
-        // Ajusta los nombres de los campos según tu formulario
-        $nickname = $_POST['nick'] ?? ''; // o podría ser 'nombre', 'username', etc.
-        $password = $_POST['password'] ?? ''; // o podría ser 'pass', 'clave', etc.
+        $nickname = $_POST['nick'] ?? '';
+        $password = $_POST['password'] ?? '';
 
         // Instanciamos el modelo
         $usuarioModel = new UsuarioModel();
@@ -47,7 +46,23 @@ class HomeController extends Controller
             $_SESSION['error'] = 'Usuario o contraseña incorrectos';
             return $this->redirect('/');
         }
+    }*/
+
+    public function login()
+{
+    $usuarioModel = new UsuarioModel();
+    $result = $usuarioModel->checkLogin($_POST['nick'], $_POST['password']);
+    
+    if ($result) {
+        $_SESSION['user'] = $result['nick']; // Guarda el nick
+        $_SESSION['user_id'] = $result['id']; // Guarda el ID del usuario
+        //return $this->redirect('/');
+    } else {
+        $_SESSION['error'] = "Credenciales incorrectas";
+        //return $this->redirect('/login');
     }
+    return $this->redirect('/');
+}
 
 
 
@@ -56,7 +71,6 @@ class HomeController extends Controller
     {
         unset($_SESSION["user"]);
         session_destroy();
-        header("Location: /");
-        exit();
+        $this->redirect('/');
     }
 }
