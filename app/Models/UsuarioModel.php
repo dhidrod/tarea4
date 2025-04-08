@@ -156,8 +156,8 @@ class UsuarioModel extends Model
         $result = $this->get();
         //$result = $this->find($id)->get();
         // Verificar si se encontró el usuario
-        if (!empty($result) && isset($result[0])) {
-            return $result[0]; // Devolver el usuario encontrado
+        if (!empty($result) && isset($result[$id-1])) {
+            return $result[$id-1]; // Devolver el usuario encontrado
         }
 
         return null; // Devolver null si no hay resultados
