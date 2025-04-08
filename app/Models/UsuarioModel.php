@@ -20,8 +20,9 @@ class UsuarioModel extends Model
     public function checkLogin($nick, $password)
     {
         // Primero busca el usuario por su nick
-        $sql = "SELECT * FROM {$this->table} WHERE nick = ?";
-        $user = $this->query($sql, [$nick])->get();
+        //$sql = "SELECT * FROM {$this->table} WHERE nick = ?";
+        //$user = $this->query($sql, [$nick])->get();
+        $user = $this->all()->where('nick', $nick)->get();
 
         // Si encontramos un usuario y la contraseña coincide
         if (!empty($user) && isset($user[0])) {
@@ -153,7 +154,7 @@ class UsuarioModel extends Model
         $this->find($id);
         // Luego obtenemos los resultados con get()
         $result = $this->get();
-
+        //$result = $this->find($id)->get();
         // Verificar si se encontró el usuario
         if (!empty($result) && isset($result[0])) {
             return $result[0]; // Devolver el usuario encontrado

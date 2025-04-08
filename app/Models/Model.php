@@ -161,7 +161,7 @@ class Model
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = ?";
 
-        return $this->query($sql, [$id]); // Añadido return y eliminado el tercer parámetro ya que no se usa.
+        $this->query($sql, [$id]); // Añadido return y eliminado el tercer parámetro ya que no se usa.
     }
 
     // Se añade where a la sentencia con operador específico

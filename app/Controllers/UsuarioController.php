@@ -78,12 +78,8 @@ class UsuarioController extends Controller
     }
 
 
-    public function panel($userId = null) // Recibir el ID desde la ruta
+   private function checkSession($userId)
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
         // Obtener el ID desde la URL si no se pasa como parámetro
         if ($userId === null) {
             // Extraer el ID de la URL (ej: "/usuario/2" -> 2)
@@ -98,11 +94,26 @@ class UsuarioController extends Controller
             return $this->redirect('/');
         }
 
+        // Comprueba si hay una sesión activa
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION["error"] = "Debes iniciar sesión primero";
+            return $this->redirect('/');
+        }
+
         // Verificar si el usuario de la URL coincide con el de la sesión (seguridad)
         if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $userId) {
             $_SESSION["error"] = "No tienes permiso para acceder a este perfil";
             return $this->redirect('/');
         }
+
+        return true; // La sesión es válida y el usuario tiene permiso
+
+    }
+
+    public function panel($userId = null) // Recibir el ID desde la ruta
+    {
+
+        if ($this->checkSession($userId)){
 
         $usuarioModel = new UsuarioModel();
         $usuario = $usuarioModel->getUserById($userId);
@@ -113,33 +124,15 @@ class UsuarioController extends Controller
         }
 
         return $this->view('usuarios.panel', ['usuario' => $usuario]);
+        } /*else {
+            // Si no hay sesión activa, redirigir a la página de inicio o de inicio de sesión
+            return $this->redirect('/');
+        }*/
     }
 
     public function toSaldo($userId = null) // Recibir el ID desde la ruta
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        // Obtener el ID desde la URL si no se pasa como parámetro
-        if ($userId === null) {
-            // Extraer el ID de la URL (ej: "/usuario/2" -> 2)
-            $requestUri = $_SERVER['REQUEST_URI'];
-            $segments = explode('/', $requestUri);
-            $userId = end($segments);
-        }
-
-        // Validar que el ID sea numérico
-        if (!is_numeric($userId)) {
-            $_SESSION["error"] = "ID de usuario inválido";
-            return $this->redirect('/');
-        }
-
-        // Verificar si el usuario de la URL coincide con el de la sesión (seguridad)
-        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $userId) {
-            $_SESSION["error"] = "No tienes permiso para acceder a este perfil";
-            return $this->redirect('/');
-        }
+        if ($this->checkSession($userId)){
 
         $usuarioModel = new UsuarioModel();
         $usuario = $usuarioModel->getUserById($userId);
@@ -150,6 +143,10 @@ class UsuarioController extends Controller
         }
 
         return $this->view('usuarios.saldo', ['usuario' => $usuario]);
+        } /*else {
+            // Si no hay sesión activa, redirigir a la página de inicio o de inicio de sesión
+            return $this->redirect('/');
+        }*/
     }
 
     public function getSaldo($id)
