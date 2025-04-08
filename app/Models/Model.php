@@ -34,8 +34,8 @@ class Model
     {
         try {
 
-            if (file_exists(__DIR__ . '/../../../vendor/autoload.php')) {
-                require_once __DIR__ . "/../../../vendor/autoload.php";
+            if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+                require_once __DIR__ . "/../../vendor/autoload.php";
                 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
                 $dotenv->load();
 
@@ -63,26 +63,44 @@ class Model
     // Consultas: 
 
     // Recibe la cadena de consulta y la ejecuta
+    // QUERY BUILDER
+    // Consultas: 
+
+    // Recibe la cadena de consulta y la ejecuta
     public function query($sql, $data = [], $params = null)
     {
-        /*echo "Consulta: {$sql} <br>"; // borrar, solo para ver ejemplo
+        echo "Consulta: {$sql} <br>"; // borrar, solo para ver ejemplo
         echo "Data: ";
         var_dump($data);
-        echo "<br>";*/
+        echo "Params: ";
+        var_dump($params);
+        echo "<br>";
 
         try {
-            if (!empty($data)) {
+            // Si hay $data se lanzará una consulta preparada, en otro caso una normal
+            if ($data) {
+                // Preparar la consulta con PDO
                 $stmt = $this->connection->prepare($sql);
-                $stmt->execute($data);
+
+                // Ejecutar con array de parámetros
+                if (is_array($data)) {
+                    $stmt->execute($data);
+                } else {
+                    $stmt->execute([$data]);
+                }
+
                 $this->query = $stmt;
             } else {
+                // Consulta directa sin parámetros
                 $this->query = $this->connection->query($sql);
             }
 
-            return $this;
+            return $this; // Devolvemos this para permitir encadenamiento de métodos
+
         } catch (\PDOException $e) {
+            // Manejo de errores
             echo "Error en la consulta: " . $e->getMessage();
-            die();
+            return false;
         }
     }
 
@@ -100,42 +118,58 @@ class Model
         // La consulta sería
         $sql = "SELECT * FROM {$this->table}";
         // Y se llama a la sentencia
-        return $this->query($sql)->get(); // Añadido return
+        return $this->query($sql); // Añadido return
+    }
+
+    // Método para obtener los resultados después de ejecutar la consulta
+    public function getResults()
+    {
+        if ($this->query) {
+            return $this->query->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        return [];
     }
 
     // Consulta base a la que se irán añadiendo partes
     public function get()
     {
-        if (empty($this->query)) {
-            $sql = "SELECT {$this->select} FROM {$this->table}";
+        $sql = "SELECT {$this->select} FROM {$this->table}";
 
-            if ($this->where) {
-                $sql .= " WHERE {$this->where}";
-            }
-
-            if ($this->orderBy) {
-                $sql .= " ORDER BY {$this->orderBy}";
-            }
-
-            $this->query($sql, $this->values);
+        // Se comprueban si están definidos para añadirlos a la cadena $sql
+        if ($this->where) {
+            $sql .= " WHERE {$this->where}";
         }
 
-        // Devolver los resultados
-        if ($this->query instanceof \PDOStatement) {
-            return $this->query->fetchAll();
+        if ($this->orderBy) {
+            $sql .= " ORDER BY {$this->orderBy}";
         }
 
-        return [];
+        // Ejecutamos la consulta y devolvemos los resultados directamente
+        $this->query($sql, $this->values);
+
+        // Limpiamos las propiedades para la siguiente consulta
+        $this->select = '*';
+        $this->where = null;
+        $this->values = [];
+        $this->orderBy = null;
+
+        // Devolvemos los resultados
+        return $this->getResults();
     }
 
     public function find($id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = ?";
-        
+
         return $this->query($sql, [$id]); // Añadido return y eliminado el tercer parámetro ya que no se usa.
     }
 
     // Se añade where a la sentencia con operador específico
+
+    // where('id', 1)
+    // where('id', '=', 1, 'AND')
+
+
     public function where($column, $operator, $value = null, $chainType = 'AND')
     {
         if ($value == null) { // Si no se pasa operador, por defecto =

@@ -4,9 +4,6 @@
 <link rel="stylesheet" href="__DIR__ . '/../../css/style.css">
 
 <body>
-    <?php
-    echo $_SESSION["DEBUG_cantidad"];
-    ?>
     <?php include_once __DIR__ . '/../header.php'; ?>
 
     <div class="cuerpoformulario-big">

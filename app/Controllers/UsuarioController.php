@@ -58,10 +58,6 @@ class UsuarioController extends Controller
 
     public function addUser()
     {
-        // Iniciar sesión si no está iniciada
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
 
         // Guardar datos del formulario en sesión (para recuperarlos en caso de error)
         $_SESSION['form_data'] = $_POST;

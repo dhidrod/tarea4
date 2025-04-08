@@ -79,8 +79,15 @@ if (isset($_POST['login'])) {
     // mostrar la consulta SQL que se está ejecutando.
 
     // Consulta 
-        $usuarios = $usuarioModel->all();
+        $usuarios = $usuarioModel->all()->get();
         // Mostrar los resultados en una tabla
+        $prueba1 = $usuarioModel->select('nick')->where('id', '1')->get();
+        $prueba2 = $usuarioModel->select('id', 'nick')->get();
+
+        echo "ID 0 " . $prueba2[0]["id"] . "<br>";
+        echo "NICK 0 " . $prueba2[0]["nick"] . "<br>";
+        echo "ID 2 " . $prueba2[2]["id"] . "<br>";
+        echo "NICK 2 " . $prueba2[2]["nick"] . "<br>";
     ?>
 
         <h3>Lista de usuarios:</h3>
@@ -143,8 +150,8 @@ if (isset($_POST['login'])) {
     //              ->get();
 
     // Consulta
-    //  $usuarioModel->select('columna1', 'columna2')
-    //              ->where('columna1', '>', '3')
+    //  $usuarioModel->select('id')
+    //              ->where('nick', '$_POST[nick]')
     //              ->where('columna2', 'columna3')
     //              ->where('columna2', 'columna3')
     //              ->where('columna3', '!=', 'columna4', 'OR')
