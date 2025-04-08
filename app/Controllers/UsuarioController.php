@@ -43,7 +43,20 @@ class UsuarioController extends Controller
 
     public function edit($id)
     {
-        echo "Editar usuario";
+        //echo "Editar usuario";
+        if ($this->checkSession($id)){
+
+            $usuarioModel = new UsuarioModel();
+            $usuario = $usuarioModel->getUserById($id);
+    
+            if (!$usuario) {
+                $_SESSION["error"] = "Usuario no encontrado";
+                return $this->redirect('/');
+            }
+    
+            return $this->view('usuarios.edit', ['usuario' => $usuario]);
+            }
+        //return $this->view('usuarios.edit');
     }
 
     public function update($id)
@@ -56,6 +69,98 @@ class UsuarioController extends Controller
         echo "Borrar usuario";
     }
 
+    public function updateUser($id){
+        if ($this->checkSession($id)){
+            if (isset($_POST['nombre']) && $this->validarDato($_POST['nombre'], 'nombre')) {
+                $nombre = $_POST['nombre'];
+            } else {
+                $_SESSION["error"] = "Nombre inválido";
+            }
+            
+            if (isset($_POST['apellido1']) && $this->validarDato($_POST['apellido1'], 'nombre')) {
+                $apellido1 = $_POST['apellido1'];
+            } else {
+                $_SESSION["error"] = "Apellido inválido";
+            }
+
+            if (isset($_POST['apellido2']) && $this->validarDato($_POST['apellido2'], 'nombre')) {
+                $apellido2 = $_POST['apellido2'];
+            } else {
+                $_SESSION["error"] = "Apellido inválido";
+            }
+
+            if (isset($_POST['nick']) && $this->validarDato($_POST['nick'], 'nombre')) {
+                $nick = $_POST['nick'];
+            } else {
+                $_SESSION["error"] = "Nick inválido";
+            }
+
+            if (isset($_POST['correo']) && $this->validarDato($_POST['correo'], 'email')) {
+                $correo = $_POST['correo'];
+            } else {
+                $_SESSION["error"] = "Correo inválido";
+            }
+
+            if (isset($_POST['fecha_nacimiento']) && $this->validarDato($_POST['fecha_nacimiento'], 'fecha')) {
+                $fecha_nacimiento = $_POST['fecha_nacimiento'];
+            } else {
+                $_SESSION["error"] = "Fecha inválida";
+            }
+
+            if ($_POST['password'] === "") {
+                $usuarioModel = new UsuarioModel();
+                $usuario = $usuarioModel->getUserById($id);
+                $usuario['password'] = $usuario['password']; // Mantener la contraseña actual
+                $password = $usuario['password']; // No se actualiza la contraseña si no se proporciona
+
+            } else {
+                
+                if (isset($_POST['password']) && $this->validarDato($_POST['password'], 'password')) {
+                    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                } else {
+                    $_SESSION["error"] = "Contraseña inválida";
+                }
+
+                if (isset($_POST['password2']) && $_POST['password'] === $_POST['password2']) {
+                    $password2 = $_POST['password2'];
+                } else {
+                    $_SESSION["error"] = "Las contraseñas no coinciden";
+                }
+            }
+
+
+            if(!isset($_SESSION["error"])){
+                $usuarioModel = new UsuarioModel();
+                $datos = [
+                    'nombre' => $nombre ?? null,
+                    'apellido1' => $apellido1 ?? null,
+                    'apellido2' => $apellido2 ?? null,
+                    'nick' => $nick ?? null,
+                    'correo' => $correo ?? null,
+                    'fecha_nacimiento' => $fecha_nacimiento ?? null,
+                    'password' => $password ?? null
+                ];
+
+                $resultado = $usuarioModel->update($id, $datos);
+    
+
+                if (!$resultado) {
+                    // Si hay errores, volver al formulario
+                    return $this->redirect('/usuario/edit/' . $id);
+                } else {
+                    // Si el registro fue exitoso, redirigir a la página principal
+                    return $this->redirect('/usuario/' . $id);
+                }
+            } else {
+                // Si hay errores, volver al formulario
+                return $this->redirect('/usuario/edit/' . $id);
+            }
+
+        }
+        // Si no hay sesión activa, redirigir a la página de inicio o de inicio de sesión
+        return $this->redirect('/');
+    }
+    
     public function addUser()
     {
 
@@ -254,4 +359,47 @@ class UsuarioController extends Controller
 
         echo "Pruebas SQL Query Builder";
     }
+
+    private function validarDato(string $dato, string $tipo): bool
+    {
+        switch ($tipo) {
+            case 'email':
+                $patron = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+                break;
+
+            case 'nombre':
+                // Permite letras, acentos, espacios, apóstrofes comunes y números (mín 3 caracteres, máximo 15)
+                $patron = '/^[\p{L}\p{N}\s\'-]{3,15}$/u';
+                break;
+
+            case 'telefono':
+                // Valida números internacionales (opcional + al inicio, de 7 a 15 dígitos)
+                $patron = '/^\+?[0-9\s\-]{7,15}$/';
+                break;
+
+            case 'password':
+                // Mínimo 8 caracteres, al menos una mayúscula, una minúscula, un número y un caracter especial
+                $patron = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/';
+                break;
+
+            case 'fecha':
+                // Formato YYYY-MM-DD con validación de fecha real
+                return (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $dato) && checkdate((int)substr($dato, 5, 2), (int)substr($dato, 8, 2), (int)substr($dato, 0, 4));
+
+            case 'numero':
+                // Números enteros o decimales (incluye negativos)
+                $patron = '/^-?\d+([.,]\d+)?$/';
+                break;
+            case 'code':
+                // Código formado por cod- seguido de 1 a 5 números
+                $patron = '/^cod-\d{1,5}$/';
+                break;
+            default:
+                return false;
+        }
+
+        return (bool) preg_match($patron, $dato);
+    }
+
+
 }

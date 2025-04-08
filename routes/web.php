@@ -47,9 +47,15 @@ Route::get('/usuario/nuevo', [UsuarioController::class, 'create']);
 Route::get('/usuario', [UsuarioController::class, 'index']);
 Route::get('/usuario/pruebas', [UsuarioController::class, 'pruebasSQLQueryBuilder']);
 //Route::get('/usuario/panel', [UsuarioController::class, 'panel']);
-Route::get('/usuario/edit/:id', [UsuarioController::class, 'panel']);
+
+
+Route::post('/usuario/edit/actualizar/:id', [UsuarioController::class, 'updateUser']);
+Route::get('/usuario/edit/:id', [UsuarioController::class, 'edit']);
+
 Route::post('/usuario/saldo/:id/subtractSaldo', [UsuarioController::class, 'subtractSaldo']);
 Route::post('/usuario/saldo/:id/addSaldo', [UsuarioController::class, 'addSaldo']);
+
+
 
 Route::get('/usuario/saldo/:id', [UsuarioController::class, 'toSaldo']);
 //Route::get('/usuario/:id', [UsuarioController::class, 'show']);
