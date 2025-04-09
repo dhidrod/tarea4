@@ -72,7 +72,8 @@ Route::get('/registro', [HomeController::class, 'toRegistro']);
 
 //Cine
 Route::get('/cine', [HomeController::class, 'toCine']);
-Route::get('/cine/comprar', [HomeController::class, 'toCine']);
+Route::get('/cine/:id', [SalaController::class, 'toSala']);
+Route::post('/cine/:id/comprar', [SalaController::class, 'comprarEntradas']);
 
 
 /*Route::get('/contacto', [ContactoController::class, 'index']);

@@ -48,7 +48,7 @@ class HomeController extends Controller
 
     public function toCine()
     {
-        if ($this->checkSession($_SESSION['user_id']) === false) {
+        if (!isset($_SESSION['user_id'])) {
             $_SESSION["error"] = "Debes iniciar sesión primero";
             return $this->redirect('/');
         }

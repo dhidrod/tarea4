@@ -4,15 +4,15 @@ namespace App\Controllers;
 
 use App\Models\SalaModel;
 
-class UsuarioController extends Controller
+class SalaController extends Controller
 {
     public function index()
     {
         // Creamos la conexión y tenemos acceso a todas las consultas sql del modelo
-        $usuarioModel = new UsuarioModel();
+        $SalaModel = new SalaModel();
 
         // Se recogen los valores del modelo, ya se pueden usar en la vista
-        $usuarios = $usuarioModel->consultaPrueba();
+        $usuarios = $SalaModel->consultaPrueba();
 
         return $this->view('cine.index', $usuarios); // compact crea un array de índice usuarios
     }
@@ -25,7 +25,7 @@ class UsuarioController extends Controller
     public function store()
     {
         // Volvemos a tener acceso al modelo
-        $usuarioModel = new UsuarioModel();
+        $SalaModel = new SalaModel();
 
         // Se llama a la función correpondiente, pasando como parámetro
         // $_POST
@@ -46,8 +46,8 @@ class UsuarioController extends Controller
         //echo "Editar usuario";
         if ($this->checkSession($id)){
 
-            $usuarioModel = new UsuarioModel();
-            $usuario = $usuarioModel->getUserById($id);
+            $SalaModel = new SalaModel();
+            $usuario = $SalaModel->getUserById($id);
     
             if (!$usuario) {
                 $_SESSION["error"] = "Usuario no encontrado";
@@ -108,8 +108,8 @@ class UsuarioController extends Controller
             }
 
             if ($_POST['password'] === "") {
-                $usuarioModel = new UsuarioModel();
-                $usuario = $usuarioModel->getUserById($id);
+                $SalaModel = new SalaModel();
+                $usuario = $SalaModel->getUserById($id);
                 $usuario['password'] = $usuario['password']; // Mantener la contraseña actual
                 $password = $usuario['password']; // No se actualiza la contraseña si no se proporciona
 
@@ -130,7 +130,7 @@ class UsuarioController extends Controller
 
 
             if(!isset($_SESSION["error"])){
-                $usuarioModel = new UsuarioModel();
+                $SalaModel = new SalaModel();
                 $datos = [
                     'nombre' => $nombre ?? null,
                     'apellido1' => $apellido1 ?? null,
@@ -141,7 +141,7 @@ class UsuarioController extends Controller
                     'password' => $password ?? null
                 ];
 
-                $resultado = $usuarioModel->update($id, $datos);
+                $resultado = $SalaModel->update($id, $datos);
     
 
                 if (!$resultado) {
@@ -168,10 +168,10 @@ class UsuarioController extends Controller
         $_SESSION['form_data'] = $_POST;
 
         // Se instancia el modelo
-        $usuarioModel = new UsuarioModel();
+        $SalaModel = new SalaModel();
 
         // Se llama a la función correspondiente, pasando como parámetro $_POST
-        $resultado = $usuarioModel->addUser($_POST);
+        $resultado = $SalaModel->addUser($_POST);
 
         if (!$resultado) {
             // Si hay errores, volver al formulario
@@ -182,6 +182,30 @@ class UsuarioController extends Controller
         }
     }
 
+    public function toSala($id){
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION["error"] = "Debes iniciar sesión primero";
+            return $this->redirect('/');
+        }
+
+        // Si la sesión es válida, redirigir a la vista de sala
+        return $this->view('cine.sala', ['id' => $id]);
+    }
+
+    public function comprarEntradas($id)
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION["error"] = "Debes iniciar sesión primero";
+            return $this->redirect('/');
+        }
+
+        foreach ($_POST["asientos"][$id] as $asiento) {
+            echo "Asiento: " . $asiento . "<br>";
+        }
+        //echo "array: " .  $_POST["asientos"][$id][0]; //$_POST["asientos"][0][0]
+        //echo "array: " .  $_POST["asientos"][$id][1]; //$_POST["asientos"][0][1]
+        //echo "array: " .  $_POST["asientos"][$id][2]; //$_POST["asientos"][0][2]
+    }
 
    private function checkSession($userId)
     {
@@ -220,8 +244,8 @@ class UsuarioController extends Controller
 
         if ($this->checkSession($userId)){
 
-        $usuarioModel = new UsuarioModel();
-        $usuario = $usuarioModel->getUserById($userId);
+        $SalaModel = new SalaModel();
+        $usuario = $SalaModel->getUserById($userId);
 
         if (!$usuario) {
             $_SESSION["error"] = "Usuario no encontrado";
@@ -239,8 +263,8 @@ class UsuarioController extends Controller
     {
         if ($this->checkSession($userId)){
 
-        $usuarioModel = new UsuarioModel();
-        $usuario = $usuarioModel->getUserById($userId);
+        $SalaModel = new SalaModel();
+        $usuario = $SalaModel->getUserById($userId);
 
         if (!$usuario) {
             $_SESSION["error"] = "Usuario no encontrado";
@@ -256,8 +280,8 @@ class UsuarioController extends Controller
 
     public function getSaldo($id)
     {
-        $usuarioModel = new UsuarioModel();
-        $usuario = $usuarioModel->getUserById($id);
+        $SalaModel = new SalaModel();
+        $usuario = $SalaModel->getUserById($id);
 
         if ($usuario && isset($usuario['saldo'])) {
             return $usuario['saldo'];
@@ -273,8 +297,8 @@ class UsuarioController extends Controller
             // Convertir la cantidad recibida a un valor numérico
             $cantidad = floatval($_POST['cantidad']);
 
-            $usuarioModel = new UsuarioModel();
-            $usuario = $usuarioModel->getUserById($id);
+            $SalaModel = new SalaModel();
+            $usuario = $SalaModel->getUserById($id);
     
             if (!$usuario) {
                 $_SESSION["error"] = "Usuario no encontrado";
@@ -286,7 +310,7 @@ class UsuarioController extends Controller
             $nuevoSaldo = $saldoActual + $cantidad;
     
             // Actualizar el saldo usando el método del modelo
-            $usuarioModel->actualizarSaldo($id, $nuevoSaldo);
+            $SalaModel->actualizarSaldo($id, $nuevoSaldo);
     
             // Redirigir al panel de usuario u otra página
             return $this->redirect('/usuario/' . $id);
@@ -304,8 +328,8 @@ class UsuarioController extends Controller
             // Convertir la cantidad recibida a un valor numérico
             $cantidad = floatval($_POST['cantidad']);
 
-            $usuarioModel = new UsuarioModel();
-            $usuario = $usuarioModel->getUserById($id);
+            $SalaModel = new SalaModel();
+            $usuario = $SalaModel->getUserById($id);
     
             if (!$usuario) {
                 $_SESSION["error"] = "Usuario no encontrado";
@@ -323,7 +347,7 @@ class UsuarioController extends Controller
             $nuevoSaldo = $saldoActual - $cantidad;
     
             // Actualizar el saldo usando el método del modelo
-            $usuarioModel->actualizarSaldo($id, $nuevoSaldo);
+            $SalaModel->actualizarSaldo($id, $nuevoSaldo);
     
             // Redirigir al panel de usuario u otra página
             return $this->redirect('/usuario/' . $id);
@@ -338,24 +362,24 @@ class UsuarioController extends Controller
     public function pruebasSQLQueryBuilder()
     {
         // Se instancia el modelo
-        $usuarioModel = new UsuarioModel();
+        $SalaModel = new SalaModel();
         // Descomentar consultas para ver la creación
-        //$usuarioModel->all();
-        //$usuarioModel->select('columna1', 'columna2')->get();
-        // $usuarioModel->select('columna1', 'columna2')
+        //$SalaModel->all();
+        //$SalaModel->select('columna1', 'columna2')->get();
+        // $SalaModel->select('columna1', 'columna2')
         //             ->where('columna1', '>', '3')
         //             ->orderBy('columna1', 'DESC')
         //             ->get();
-        // $usuarioModel->select('columna1', 'columna2')
+        // $SalaModel->select('columna1', 'columna2')
         //             ->where('columna1', '>', '3')
         //             ->where('columna2', 'columna3')
         //             ->where('columna2', 'columna3')
         //             ->where('columna3', '!=', 'columna4', 'OR')
         //             ->orderBy('columna1', 'DESC')
         //             ->get();
-        $usuarioModel->create(['id' => 1, 'nombre' => 'nombre1']);
-        //$usuarioModel->delete(['id' => 1]);
-        //$usuarioModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
+        $SalaModel->create(['id' => 1, 'nombre' => 'nombre1']);
+        //$SalaModel->delete(['id' => 1]);
+        //$SalaModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
 
         echo "Pruebas SQL Query Builder";
     }

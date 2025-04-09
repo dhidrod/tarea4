@@ -41,7 +41,7 @@ if (!isset($salas) || !empty($salas)){
                             <tr>
                                 <td><?php echo htmlspecialchars($sala['nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($sala['capacidad']); ?></td>
-                                <td><a href="/cine/comprar" class="button">Comprar entrada</a></td>
+                                <td><a href="/cine/<?php echo htmlspecialchars($sala['id']); ?>" class="button">Comprar entrada</a></td>
                             </tr>
                         <?php endforeach; ?>
                         </tr>
