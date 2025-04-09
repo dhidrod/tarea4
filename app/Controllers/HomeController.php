@@ -12,6 +12,12 @@ class HomeController extends Controller
         return $this->view('home'); // Seleccionamos una vista (método padre)
     }
 
+    public function error()
+    {
+        $_SESSION["error"] = "Error en la página solicitada";
+        return $this->redirect('/'); // Seleccionamos una vista (método padre)
+    }
+
 // Usuario
 
     public function toRegistro()

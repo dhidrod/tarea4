@@ -69,6 +69,11 @@ class AsientoController extends Controller
             $_SESSION["error"] = "Debes iniciar sesión primero";
             return $this->redirect('/');
         }
+
+        if(!isset($_POST["asientos"])) {
+            $_SESSION["error"] = "No has seleccionado asientos";
+            return $this->redirect('/cine/'.$id);
+        }
         
         $AsientoModel = new AsientoModel();
         
