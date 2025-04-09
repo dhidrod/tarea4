@@ -5,7 +5,7 @@ namespace App\Models;
 class AsientoModel extends Model
 {
     // Nombre de la tabla que se realizarán las consultas
-    protected $table = 'salas';
+    protected $table = 'asientos';
 
     // Aquí también se podría definir las consultas que son específicas
     // para los usuarios. Para las demás llamaremos a los métodos de la
@@ -17,6 +17,17 @@ class AsientoModel extends Model
     // protected $db_pass = '';
     // protected $db_name = 'mvc_database'; 
 
+    public function mostrarAsientos($asientosSeleccionados)
+    {
+        $sala_id = $asientosSeleccionados;
+        for ($i = 0; $i < count($sala_id); $i++) {
+            $posicion = $asientosSeleccionados[$sala_id[$i]];
+        }
+        $precio = $this->select('precio')->where('sala_id', $sala_id)->where('posicion', $posicion)->get();
+        //$asientos = $this->where('sala_id', $sala_id)->get();
+
+        return $precio;
+    }
 
     public function addSala($data)
     {

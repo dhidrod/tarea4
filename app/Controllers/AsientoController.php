@@ -69,10 +69,22 @@ class AsientoController extends Controller
             $_SESSION["error"] = "Debes iniciar sesión primero";
             return $this->redirect('/');
         }
-
-        foreach ($_POST["asientos"][$id] as $a) {
-            echo "Asiento: " . $a . "<br>";
+        
+        $AsientoModel = new AsientoModel();
+        
+        foreach ($_POST["asientos"] as $id => $asientosPorId) {
+            foreach ($asientosPorId as $asiento => $valor) {
+                $asiento = $AsientoModel->all()->where('sala_id', $id)->where('posicion', $valor)->get();
+                $posicion[] = $asiento[0]['posicion'];
+                $precio[] = $asiento[0]['precio'];
+                $salas['asiento'] = $posicion;
+                $salas['precio'] = $precio;
+            }
         }
+
+        $salas['id'] = $id;
+        return $this->view('cine.resumen',['salas' => $salas]);
+
         //echo "array: " .  $_POST["asientos"][$id][0]; //$_POST["asientos"][0][0]
         //echo "array: " .  $_POST["asientos"][$id][1]; //$_POST["asientos"][0][1]
         //echo "array: " .  $_POST["asientos"][$id][2]; //$_POST["asientos"][0][2]
