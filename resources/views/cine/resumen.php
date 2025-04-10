@@ -25,40 +25,41 @@ if (!isset($salas) || !empty($salas)){
             }
             ?>
         </div>
-        
 
-            <div class="tabla-resultados">
-                <!--<h2>Resumen de compra</h2>-->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sala</th>
-                            <th>Asiento</th>
-                            <th>Día</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+
+        <div class="tabla-resultados">
+            <!--<h2>Resumen de compra</h2>-->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sala</th>
+                        <th>Asiento</th>
+                        <th>Día</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
                         <?php for ($i = 0; $i <= array_key_last($salas['asiento']); $i++): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($salas['id']); ?></td>
-                                <td><?php echo htmlspecialchars($salas['asiento'][$i]); ?></td>
-                                <td><?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?></td>
-                                <td><?php echo htmlspecialchars($salas['precio'][$i]); ?></td>
-                            </tr>
-                        <?php endfor; ?>
-                            <td>Total a pagar: </td>
-                            <td><?php echo htmlspecialchars(array_sum($salas['precio'])); ?></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <tr>
+                        <td><?php echo htmlspecialchars($salas['id']); ?></td>
+                        <td><?php echo htmlspecialchars($salas['asiento'][$i]); ?></td>
+                        <td><?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?></td>
+                        <td><?php echo htmlspecialchars($salas['precio'][$i]); ?></td>
+                    </tr>
+                <?php endfor; ?>
+                <td></td>
+                <td></td>
+                <td>Total a pagar: </td>
+                <td><?php echo htmlspecialchars(array_sum($salas['precio'])); ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 
     <?php include_once __DIR__ . '/../footer.php'; ?>
 </body>
+
 </html>

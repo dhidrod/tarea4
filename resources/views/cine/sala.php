@@ -1,4 +1,5 @@
 <?php
+
 use app\Models\SalaModel;
 use app\Controllers\AsientoController;
 
@@ -47,16 +48,16 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
             }
             ?>
         </div>
-        
+
         <!-- Calendario -->
         <div class="calendario-mejorado">
             <div class="cabecera-calendario">
                 <div class="navegacion-mes">
-                    <a href="?mes=<?= date('m', strtotime('-1 month', $fechaActual)) ?>&año=<?= date('Y', strtotime('-1 month', $fechaActual)) ?>&id=<?= $id ?>" 
-                       class="navegacion-btn">&lt; Mes Anterior</a>
+                    <a href="?mes=<?= date('m', strtotime('-1 month', $fechaActual)) ?>&año=<?= date('Y', strtotime('-1 month', $fechaActual)) ?>&id=<?= $id ?>"
+                        class="navegacion-btn">&lt; Mes Anterior</a>
                     <h2><?= strftime('%B %Y', $fechaActual) ?></h2>
-                    <a href="?mes=<?= date('m', strtotime('+1 month', $fechaActual)) ?>&año=<?= date('Y', strtotime('+1 month', $fechaActual)) ?>&id=<?= $id ?>" 
-                       class="navegacion-btn">Mes Siguiente &gt;</a>
+                    <a href="?mes=<?= date('m', strtotime('+1 month', $fechaActual)) ?>&año=<?= date('Y', strtotime('+1 month', $fechaActual)) ?>&id=<?= $id ?>"
+                        class="navegacion-btn">Mes Siguiente &gt;</a>
                 </div>
                 <div class="fecha-seleccionada">
                     Fecha seleccionada: <?= $fechaSeleccionada ?>
@@ -70,29 +71,29 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
             </div>
 
             <div class="cuadricula-dias">
-                <?php 
+                <?php
                 $primerDia = date('N', strtotime("$año-$mes-01"));
                 for ($i = 1; $i < $primerDia; $i++): ?>
                     <div class="dia-vacio"></div>
                 <?php endfor; ?>
 
-                <?php for ($i = 1; $i <= $diasEnMes; $i++): 
+                <?php for ($i = 1; $i <= $diasEnMes; $i++):
                     $esHoy = ($i == date('j') && $mes == date('n') && $año == date('Y'));
                 ?>
-                    <a href="?mes=<?= $mes ?>&año=<?= $año ?>&dia=<?= $i ?>&id=<?= $id ?>" 
-                       class="dia-btn <?= ($i == $diaSeleccionado) ? 'seleccionado' : '' ?> <?= $esHoy ? 'hoy' : '' ?>">
+                    <a href="?mes=<?= $mes ?>&año=<?= $año ?>&dia=<?= $i ?>&id=<?= $id ?>"
+                        class="dia-btn <?= ($i == $diaSeleccionado) ? 'seleccionado' : '' ?> <?= $esHoy ? 'hoy' : '' ?>">
                         <?= $i ?>
-                        <?php if($esHoy): ?><div class="indicador-hoy"></div><?php endif; ?>
+                        <?php if ($esHoy): ?><div class="indicador-hoy"></div><?php endif; ?>
                     </a>
                 <?php endfor; ?>
             </div>
         </div>
 
-<!-- Asientos -->
-<?php if (isset($salas) && !empty($salas)): ?>
+        <!-- Asientos -->
+        <?php if (isset($salas) && !empty($salas)): ?>
             <form method="post" action="/cine/<?= $id ?>/comprar">
                 <input type="hidden" name="fecha_seleccionada" value="<?= $año ?>-<?= $mes ?>-<?= $diaSeleccionado ?>">
-                
+
                 <div class="tabla-resultados">
                     <h2>Asientos Disponibles - <?= $fechaSeleccionada ?></h2>
                     <?php foreach ($salas as $sala): ?>
@@ -104,19 +105,19 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
                                 $asientos_por_fila = 10;
                                 $contador = 1;
                                 $filas = ceil($sala['capacidad'] / $asientos_por_fila);
-                                
+
                                 for ($i = 0; $i < $filas; $i++) {
                                     echo '<div class="fila-asientos">';
                                     for ($j = 0; $j < $asientos_por_fila; $j++) {
                                         if ($contador > $sala['capacidad']) break;
-                                        
+
                                         $ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
                                         echo '<label class="asiento-label">';
                                         echo '<input type="checkbox" 
-                                                   name="asientos['.$sala['id'].'][]" 
-                                                   value="'.$contador.'" 
-                                                   '.($ocupado ? 'disabled' : '').'>';
-                                        echo '<div class="asiento-btn '.($ocupado ? 'ocupado' : '').'">';
+                                                   name="asientos[' . $sala['id'] . '][]" 
+                                                   value="' . $contador . '" 
+                                                   ' . ($ocupado ? 'disabled' : '') . '>';
+                                        echo '<div class="asiento-btn ' . ($ocupado ? 'ocupado' : '') . '">';
                                         echo $contador;
                                         echo '</div>';
                                         echo '</label>';
@@ -136,4 +137,5 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
 
     <?php include_once __DIR__ . '/../footer.php'; ?>
 </body>
+
 </html>
