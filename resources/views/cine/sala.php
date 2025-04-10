@@ -1,10 +1,13 @@
 <?php
 use app\Models\SalaModel;
+use app\Controllers\AsientoController;
 
 if (!isset($salas) || !empty($salas)){
     $salaModel = new SalaModel();
     $salas = $salaModel->where('id', $id)->get();
     //$prueba1 = $usuarioModel->select('nick')->where('id', '1')->get();
+
+    $asientoController = new AsientoController();
 }
 ?>
 <!DOCTYPE html>
@@ -42,7 +45,18 @@ if (!isset($salas) || !empty($salas)){
                                     echo '<tr>';
                                     for ($j = 0; $j < $asientos_por_fila; $j++) {
                                         if ($contador > $sala['capacidad']) break;
-                                        echo '<td>
+                                        if ($asientoController->isAsientoOcupado($sala['id'], $contador)) {
+                                            echo '<td>
+                                                <label class="asiento-label">
+                                                    <input type="checkbox" 
+                                                           name="asientos[' . $sala['id'] . '][]" 
+                                                           value="' . $contador . '" 
+                                                           disabled>
+                                                    ' . $contador . '
+                                                </label>
+                                              </td>';
+                                        } else {
+                                            echo '<td>
                                                 <label class="asiento-label">
                                                     <input type="checkbox" 
                                                            name="asientos[' . $sala['id'] . '][]" 
@@ -50,6 +64,8 @@ if (!isset($salas) || !empty($salas)){
                                                     ' . $contador . '
                                                 </label>
                                               </td>';
+                                        }
+                                        
                                         $contador++;
                                     }
                                     echo '</tr>';

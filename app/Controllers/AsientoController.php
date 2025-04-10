@@ -122,6 +122,13 @@ class AsientoController extends Controller
         echo "Pruebas SQL Query Builder";
     }
 
+    public function isAsientoOcupado($salaId, $asientoPosicion)
+    {
+        $AsientoModel = new AsientoModel();
+        $asiento = $AsientoModel->all()->where('sala_id', $salaId)->where('posicion', $asientoPosicion)->get();
+        return !$asiento[0]['disponible'];
+    }
+
     private function validarDato(string $dato, string $tipo): bool
     {
         switch ($tipo) {

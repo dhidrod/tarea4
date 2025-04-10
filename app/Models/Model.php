@@ -69,12 +69,12 @@ class Model
     // Recibe la cadena de consulta y la ejecuta
     public function query($sql, $data = [], $params = null)
     {
-        echo "Consulta: {$sql} <br>"; // borrar, solo para ver ejemplo
+        /*echo "Consulta: {$sql} <br>"; // borrar, solo para ver ejemplo
         echo "Data: ";
         var_dump($data);
         echo "Params: ";
         var_dump($params);
-        echo "<br>";
+        echo "<br>";*/
 
         try {
             // Si hay $data se lanzará una consulta preparada, en otro caso una normal
