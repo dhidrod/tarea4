@@ -41,6 +41,7 @@ CREATE TABLE entradas (
     usuario_id INT NOT NULL,
     asiento_id INT NOT NULL,
     fecha_compra DATE NOT NULL,
+    fecha_exp DATE NOT NULL,
     precio_compra DECIMAL(6,2) NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (asiento_id) REFERENCES asientos(id) ON DELETE CASCADE

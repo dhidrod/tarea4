@@ -3,9 +3,21 @@
 namespace App\Controllers;
 
 use App\Models\AsientoModel;
+use App\Models\EntradaModel;
 
 class AsientoController extends Controller
 {
+    protected $anioActual;
+    protected $mesActual;
+    protected $diaSeleccionado;
+
+    public function setFechaSeleccionada($anioActual, $mesActual, $diaSeleccionado)
+    {
+        $this->anioActual = $anioActual;
+        $this->mesActual = $mesActual;
+        $this->diaSeleccionado = $diaSeleccionado;
+    }
+    
     public function index()
     {
         // Creamos la conexión y tenemos acceso a todas las consultas sql del modelo
@@ -126,7 +138,29 @@ class AsientoController extends Controller
     {
         $AsientoModel = new AsientoModel();
         $asiento = $AsientoModel->all()->where('sala_id', $salaId)->where('posicion', $asientoPosicion)->get();
-        return !$asiento[0]['disponible'];
+        
+        new EntradaModel();
+        $EntradaModel = new EntradaModel();
+        $fecha = $EntradaModel->select('fecha_exp')->where('asiento_id', $asiento[0]['id'])->get();
+        // Obtener la fecha seleccionada desde la URL
+        if (!isset($_GET['año']) || !isset($_GET['mes']) || !isset($_GET['dia'])) {
+            // Obtiene la fecha actual
+            $fechaSeleccionada = date('Y-m-d');
+        } else {
+            // Formatear la fecha seleccionada
+            $fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
+        }
+        //$fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
+        // Verificar si hay resultados de fecha antes de acceder al índice
+        if (!empty($fecha) && isset($fecha[0]['fecha_exp'])) {
+            if ($fecha[0]['fecha_exp'] >= $fechaSeleccionada) {
+                return true; // Asiento ocupado
+            } else {
+                // Si la fecha de la entrada es menor a la fecha actual se considera libre
+                return false; // Asiento libre
+            }
+        }
+
     }
 
     private function validarDato(string $dato, string $tipo): bool

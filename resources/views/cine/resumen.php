@@ -34,6 +34,7 @@ if (!isset($salas) || !empty($salas)){
                         <tr>
                             <th>Sala</th>
                             <th>Asiento</th>
+                            <th>Día</th>
                             <th>Precio</th>
                         </tr>
                     </thead>
@@ -43,12 +44,14 @@ if (!isset($salas) || !empty($salas)){
                             <tr>
                                 <td><?php echo htmlspecialchars($salas['id']); ?></td>
                                 <td><?php echo htmlspecialchars($salas['asiento'][$i]); ?></td>
+                                <td><?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?></td>
                                 <td><?php echo htmlspecialchars($salas['precio'][$i]); ?></td>
                             </tr>
                         <?php endfor; ?>
                             <td>Total a pagar: </td>
-                            <td></td>
                             <td><?php echo htmlspecialchars(array_sum($salas['precio'])); ?></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
