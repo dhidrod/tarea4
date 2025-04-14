@@ -16,6 +16,14 @@
             }
             ?>
         </div>
+        <div class="success">
+            <?php
+            if (isset($_SESSION['success'])) {
+                echo "<p>{$_SESSION['success']}</p>";
+                unset($_SESSION['success']); // Limpiar el mensaje de éxito después de mostrarlo
+            }
+            ?>
+        </div>
         <?php if (isset($usuario) && !empty($usuario)): ?>
             <div class="tabla-resultados">
                 <h2>Información del Usuario</h2>
@@ -55,7 +63,7 @@
                 </ul>
             </div>
         <?php else: ?>
-            <div class="error-message">
+            <div class="error">
                 <p>No se encontró información del usuario.</p>
             </div>
         <?php endif; ?>

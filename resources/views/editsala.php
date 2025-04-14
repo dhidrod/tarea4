@@ -56,7 +56,15 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
             }
             ?>
         </div>
-
+        <div class="success">
+            <?php
+            if (isset($_SESSION['success'])) {
+                echo "<p>{$_SESSION['success']}</p>";
+                unset($_SESSION['success']); // Limpiar el mensaje de éxito después de mostrarlo
+            }
+            ?>
+        </div>
+        
         <!-- Asientos -->
         <?php if (isset($salas) && !empty($salas)): ?>
             <form method="post" action="/admin/<?= $id ?>/edit">

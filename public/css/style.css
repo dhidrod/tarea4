@@ -25,6 +25,14 @@
   /* Componentes */
   --component-bg: #f8f8f8; /* Blanco para tarjetas y formularios */
   --border-color: rgba(225, 53, 53, 0.5); /* Rojo translúcido para bordes */
+
+  /* Error */
+  --error-color: #ff3737; /* Rojo intenso para errores */
+  --error-rgb: 255, 55, 55; /*rgb(255, 55, 55);*/
+
+  /* Success: Verde claro para mensajes de éxito */
+  --success-color: #00d100; /* Verde claro (para mensajes de éxito) */
+  --success-rgb: 0, 209, 0; /*rgb(0, 209, 0);*/
 }
 
 * {
@@ -307,8 +315,14 @@ input[type="file"]::-webkit-file-upload-button:hover {
 }
 
 .error p {
-  color: var(--primary-color);
-  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--error-color);
+  background-color: rgba(var(--error-rgb), 0.1);
+  padding: 1rem;
+}
+
+.success p {
+  color: var(--success-color);
+  background-color: rgba(var(--success-rgb), 0.1);
   padding: 1rem;
 }
 

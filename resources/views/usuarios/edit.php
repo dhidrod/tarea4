@@ -16,6 +16,14 @@
             }
             ?>
         </div>
+        <div class="success">
+            <?php
+            if (isset($_SESSION['success'])) {
+                echo "<p>{$_SESSION['success']}</p>";
+                unset($_SESSION['success']); // Limpiar el mensaje de éxito después de mostrarlo
+            }
+            ?>
+        </div>
         <?php if (isset($usuario) && !empty($usuario)): ?>
                 
 

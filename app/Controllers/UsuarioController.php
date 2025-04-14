@@ -280,7 +280,7 @@ class UsuarioController extends Controller
                 $_SESSION["error"] = "Usuario no encontrado";
                 return $this->redirect('/');
             }
-    
+   
             // Sumar la cantidad al saldo actual
             $saldoActual = $usuario['saldo'];
             $nuevoSaldo = $saldoActual + $cantidad;
@@ -289,6 +289,7 @@ class UsuarioController extends Controller
             $usuarioModel->actualizarSaldo($id, $nuevoSaldo);
     
             // Redirigir al panel de usuario u otra página
+            $_SESSION["success"] = "Saldo actualizado correctamente";
             return $this->redirect('/usuario/' . $id);
         }
     
