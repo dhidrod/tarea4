@@ -199,7 +199,7 @@ class EntradaController extends Controller
                     $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
                     // Creamos un array con todos los datos para la entrada
                     $entrada = [
-                        'Ausuario_id' => $_SESSION['user_id'],
+                        'usuario_id' => $_SESSION['user_id'],
                         'asiento_id' => $asientosPorId,
                         'precio_compra' => $precioAsiento[0]['precio'],
                         'fecha_exp' => $_POST["fecha_seleccionada"]
