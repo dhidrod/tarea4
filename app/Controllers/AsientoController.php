@@ -95,7 +95,7 @@ class AsientoController extends Controller
 
         $_SESSION["success"] = "Asiento editado correctamente";
         $connection->commit(); // Confirmar la transacción
-        return $this->redirect('/admin/' . $id);
+        return $this->redirect('/admin/' . $asiento['sala_id']);
     }
 
     public function comprarEntradas($id)

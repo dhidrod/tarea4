@@ -77,13 +77,12 @@ $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado
                                     for ($j = 0; $j < $asientos_por_fila; $j++) {
                                         if ($contador > $sala['capacidad']) break;
 
-                                        $ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
+                                        //$ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
                                         echo '<label class="asiento-label">';
                                         echo '<input type="checkbox" 
                                                    name="asientos[' . $sala['id'] . '][]" 
-                                                   value="' . $contador . '" 
-                                                   ' . ($ocupado ? 'disabled' : '') . '>';
-                                        echo '<div class="asiento-btn ' . ($ocupado ? 'ocupado' : '') . '">';
+                                                   value="' . $contador . '">';
+                                        echo '<div class="asiento-btn">';
                                         echo $contador;
                                         echo '</div>';
                                         echo '</label>';
