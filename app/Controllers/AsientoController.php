@@ -65,14 +65,37 @@ class AsientoController extends Controller
     }
 
    
-    public function toSala($id){
-        if (!isset($_SESSION['user_id'])) {
-            $_SESSION["error"] = "Debes iniciar sesión primero";
-            return $this->redirect('/');
+    public function editarAsiento(){
+        $AsientoModel = new AsientoModel();
+        $connection = $AsientoModel->getConnection();
+        $connection->beginTransaction(); // Iniciar la transacción
+        
+        try {
+            foreach ($_POST["asientos"] as $index => $asiento) {
+                if (!isset($asiento['id']) || !isset($asiento['precio'])) {
+                    throw new \Exception("Faltan datos requeridos para el asiento");
+                }
+                
+                $id = $asiento['id'];
+                $precio = $asiento['precio'];
+                
+                // Pasamos los datos como array asociativo al método update
+                $resultado = $AsientoModel->update($id, ['precio' => $precio]);
+                
+                if ($resultado === false) {
+                    throw new \Exception("Error al actualizar el asiento con ID: " . $_REQUEST["asientos"][0]["sala_id"]);
+                }
+            }
+        }
+        catch (\Exception $e) {
+            $_SESSION["error"] = "Error al editar el asiento: " . $e->getMessage();
+            $connection->rollBack(); // Deshacer la transacción en caso de error
+            return $this->redirect('/admin');
         }
 
-        // Si la sesión es válida, redirigir a la vista de sala
-        return $this->view('cine.sala', ['id' => $id]);
+        $_SESSION["success"] = "Asiento editado correctamente";
+        $connection->commit(); // Confirmar la transacción
+        return $this->redirect('/admin/' . $id);
     }
 
     public function comprarEntradas($id)

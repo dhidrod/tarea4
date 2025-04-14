@@ -62,8 +62,20 @@ class HomeController extends Controller
     }
 
 
+// Administración
 
+    public function toAdmin()
+    {
+        return $this->view('admin');
+    }
 
+    public function toEditSala($id){
+        return $this->view('editsala', ['id' => $id]);
+    }
+
+    public function toEditAsiento($id){
+        return $this->view('editasiento', ['id' => $id]);
+    }
 
     private function checkSession($userId)
     {

@@ -81,6 +81,13 @@ Route::post('/cine/:id/comprar', [AsientoController::class, 'comprarEntradas']);
 Route::post('/cine/:id/comprar/finalizar', [EntradaController::class, 'terminarCompra']);
 
 
+// Panel de administración
+Route::get('/admin', [HomeController::class, 'toAdmin']);
+Route::post('/admin/add', [SalaController::class, 'addSala']);
+Route::get('/admin/:id', [HomeController::class, 'toEditSala']);
+Route::post('/admin/:id/edit', [HomeController::class, 'toEditAsiento']);
+Route::post('/admin/:id/edit/update', [AsientoController::class, 'editarAsiento']);
+
 /*Route::get('/contacto', [ContactoController::class, 'index']);
 Route::get('/formulario', [FormularioController::class, 'index']);
 Route::get('/curso', [CursoController::class, 'index']);

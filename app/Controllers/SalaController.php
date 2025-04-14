@@ -17,39 +17,25 @@ class SalaController extends Controller
         return $this->view('cine.index', $usuarios); // compact crea un array de índice usuarios
     }
 
-    public function create()
+    public function addSala()
     {
-        return $this->view('usuarios.create');
-    }
-
-    public function store()
-    {
-        // Volvemos a tener acceso al modelo
         $SalaModel = new SalaModel();
 
-        // Se llama a la función correpondiente, pasando como parámetro
-        // $_POST
-        var_dump($_POST);
-        echo "Se ha enviado desde POST";
+        if ($this->validarDato($_POST["nombre"], 'nombre') == false) {
+            $_SESSION["error"] = "El nombre de la sala no tiene un formato válido<br>";     
+        }
+        if ($this->validarDato($_POST["capacidad"], 'numero') == false) {
+            $_SESSION["error"] = "La capacidad no tiene un formato válido<br>";
+        }
 
-        // Podríamos redirigir a donde se desee después de insertar
-        //return $this->redirect('/contacts');
-    }
+        if (isset($_SESSION["error"])) {
+            return $this->redirect('/admin');
+        }
 
-    public function show($id)
-    {
-        echo "Mostrar usuario con id: {$id}";
-    }
-
-
-    public function update($id)
-    {
-        echo "Actualizar usuario";
-    }
-
-    public function destroy($id)
-    {
-        echo "Borrar usuario";
+        $data = ["nombre" => $_POST["nombre"], "capacidad" => $_POST["capacidad"]];
+        $SalaModel->create($data);
+        $_SESSION["success"] = "Sala creada correctamente";
+        return $this->redirect('/admin');
     }
 
    
@@ -78,31 +64,5 @@ class SalaController extends Controller
         //echo "array: " .  $_POST["asientos"][$id][2]; //$_POST["asientos"][0][2]
     }
 
-   
-    // Función para mostrar como fuciona con ejemplos
-    public function pruebasSQLQueryBuilder()
-    {
-        // Se instancia el modelo
-        $SalaModel = new SalaModel();
-        // Descomentar consultas para ver la creación
-        //$SalaModel->all();
-        //$SalaModel->select('columna1', 'columna2')->get();
-        // $SalaModel->select('columna1', 'columna2')
-        //             ->where('columna1', '>', '3')
-        //             ->orderBy('columna1', 'DESC')
-        //             ->get();
-        // $SalaModel->select('columna1', 'columna2')
-        //             ->where('columna1', '>', '3')
-        //             ->where('columna2', 'columna3')
-        //             ->where('columna2', 'columna3')
-        //             ->where('columna3', '!=', 'columna4', 'OR')
-        //             ->orderBy('columna1', 'DESC')
-        //             ->get();
-        $SalaModel->create(['id' => 1, 'nombre' => 'nombre1']);
-        //$SalaModel->delete(['id' => 1]);
-        //$SalaModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
-
-        echo "Pruebas SQL Query Builder";
-    }
 
 }
