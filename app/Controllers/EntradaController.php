@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use App\Models\AsientoModel;
 use App\Models\EntradaModel;
+use App\Models\UsuarioModel;
+use App\Models\CineModel;
 
-class AsientoController extends Controller
+class EntradaController extends Controller
 {
     protected $anioActual;
     protected $mesActual;
@@ -134,34 +136,46 @@ class AsientoController extends Controller
         echo "Pruebas SQL Query Builder";
     }
 
-    public function isAsientoOcupado($salaId, $asientoPosicion)
-    {
-        $AsientoModel = new AsientoModel();
-        $asiento = $AsientoModel->all()->where('sala_id', $salaId)->where('posicion', $asientoPosicion)->get();
-        
-        new EntradaModel();
+    public function terminarCompra(){
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION["error"] = "Debes iniciar sesión primero";
+            return $this->redirect('/');
+        }
         $EntradaModel = new EntradaModel();
-        $fecha = $EntradaModel->select('fecha_exp')->where('asiento_id', $asiento[0]['id'])->get();
-        // Obtener la fecha seleccionada desde la URL
-        if (!isset($_GET['año']) || !isset($_GET['mes']) || !isset($_GET['dia'])) {
-            // Obtiene la fecha actual
-            $fechaSeleccionada = date('Y-m-d');
+        $usuarioModel = new UsuarioModel();
+        // Primero comprobamos el saldo del usuario, para ver si tiene dinero para comprar las entradas.
+        // Si no tiene saldo, redirigir a la vista de saldo insuficiente
+        $saldo = $usuarioModel->select('saldo')->where('id', $_SESSION['user_id'])->get();
+        if ($saldo < $_POST['precio_total']) {
+            $_SESSION["error"] = "Saldo insuficiente para realizar la compra";
+            return $this->redirect('/cine/'.$_POST['sala_id']);
         } else {
-            // Formatear la fecha seleccionada
-            $fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
-        }
-        //$fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
-        // Verificar si hay resultados de fecha antes de acceder al índice
-        if (!empty($fecha) && isset($fecha[0]['fecha_exp'])) {
-            if ($fecha[0]['fecha_exp'] >= $fechaSeleccionada) {
-                return true; // Asiento ocupado
-            } else {
-                // Si la fecha de la entrada es menor a la fecha actual se considera libre
-                return false; // Asiento libre
+            // Si tiene saldo suficiente, restamos el precio total al saldo del usuario
+            $nuevoSaldo = $saldo[0]['saldo'] - $_POST['precio_total'];
+            $usuarioModel->update(['id' => $_SESSION['user_id']], ['saldo' => $nuevoSaldo]);
+            // Y actualizamos el saldo del cine.
+            $cineModel = new CineModel();
+            $saldoCine = $cineModel->select('saldo')->where('id', 1)->get();
+            $nuevoSaldo = $saldoCine[0]['saldo'] + $_POST['precio_total'];
+            $cineModel->update(['id' => 1], ['saldo' => $nuevoSaldo]);
+            // Ahora creamos la entrada en la base de datos. Por cada asiento creamos una entrada.
+            foreach ($_POST["asientos"] as $asientosPorId) {
+                $entrada = [
+                    'usuario_id' => $_SESSION['user_id'],
+                    'asiento_id' => $asientosPorId,
+                    'precio_compra' => $_POST['precio_total'],
+                    'fecha_exp' => $_POST["fecha_seleccionada"]
+                ];
+                $EntradaModel->create($entrada);
             }
+            // Redirigimos a la vista de compra realizada con éxito
+            $_SESSION["success"] = "Compra realizada con éxito";    
+            return $this->redirect('/cine/'.$_POST['sala_id']);
         }
-
+        
     }
+
+    
 
 
 }

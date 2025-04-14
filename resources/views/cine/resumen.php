@@ -56,6 +56,20 @@ if (!isset($salas) || !empty($salas)){
                 </tbody>
             </table>
         </div>
+        
+        <form action="/cine/<?php echo htmlspecialchars($salas['id']); ?>/comprar/finalizar" method="post">
+            <?php foreach ($salas['asiento'] as $asiento): ?>
+                <input type="hidden" name="asientos[]" value="<?php echo htmlspecialchars($asiento); ?>">
+            <?php endforeach; ?>
+            <input type="hidden" name="sala_id" value="<?php echo htmlspecialchars($salas['id']); ?>">
+            <input type="hidden" name="fecha_seleccionada" value="<?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?>">
+            <input type="hidden" name="precio_total" value="<?php echo htmlspecialchars(array_sum($salas['precio'])); ?>">
+            <button type="submit" class="btn-primario">Pagar</button>
+        </form>
+
+        <!-- <a href="/cine/<?php //echo htmlspecialchars($salas['id']); ?>/comprar">Completar</a> -->
+        <a href="/cine/<?php echo htmlspecialchars($salas['id']); ?>">Volver a la sala</a>
+
 
     </div>
 

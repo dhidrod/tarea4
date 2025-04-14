@@ -229,6 +229,11 @@ class Model
         $sql = "UPDATE {$this->table} SET {$fields} WHERE id = ?";
 
         $values = array_values($data);
+        //$values[] = $id;
+        // Esto es nuevo, intenta arreglar un bug donde no se pasaba el id si no un array con el id dentro
+        if (is_array($id)) {
+            $id = reset($id); // Optiene el primer valor del array
+        }
         $values[] = $id;
 
         $this->query($sql, $values);

@@ -70,7 +70,9 @@ if (isset($_POST['login'])) {
     <p class="header-paragraph">Pruebas de consultas (hacer scroll):</p>
     <?php
 
-    use app\Models\UsuarioModel; // Recuerda el uso del autoload.php
+use App\Models\CineModel;
+use app\Models\UsuarioModel; // Recuerda el uso del autoload.php
+use app\Models\EntradaModel; // Recuerda el uso del autoload.php
 
     // Se instancia el modelo
     $usuarioModel = new UsuarioModel();
@@ -84,10 +86,10 @@ if (isset($_POST['login'])) {
         $prueba1 = $usuarioModel->select('nick')->where('id', '1')->get();
         $prueba2 = $usuarioModel->select('id', 'nick')->get();
 
-        echo "ID 0 " . $prueba2[0]["id"] . "<br>";
+        /*echo "ID 0 " . $prueba2[0]["id"] . "<br>";
         echo "NICK 0 " . $prueba2[0]["nick"] . "<br>";
         echo "ID 2 " . $prueba2[2]["id"] . "<br>";
-        echo "NICK 2 " . $prueba2[2]["nick"] . "<br>";
+        echo "NICK 2 " . $prueba2[2]["nick"] . "<br>";*/
     ?>
 
         <h3>Lista de usuarios:</h3>
@@ -160,12 +162,25 @@ if (isset($_POST['login'])) {
 
     // Consulta
     //  $usuarioModel->create(['id' => 1, 'nombre' => 'nombre1', 'apellidos' => 'apellidos1']);
+    //$CineModel = new CineModel();
+    //$CineModel->create(['saldo' => 10]);
+    $EntradaModel = new EntradaModel();
+    $data = [
+        'usuario_id' => 11,
+        'asiento_id' => 5,
+        'precio_compra' => 5,
+        'fecha_exp' => '2025-04-14'
+    ];
 
+    //$EntradaModel->create(['usuario_id' => 11, 'asiento_id' => 5, 'precio_compra' => 10, 'fecha_exp' => '2025-04-14']);
+    //$EntradaModel->create($data);
+    
     // Consulta
     //$usuarioModel->delete(['id' => 1]);
 
     // Consulta
     //  $usuarioModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
+    //  $usuarioModel->update(['id' => 11], ['saldo' => '510']);
 
     echo "Pruebas SQL Query Builder";
     ?>

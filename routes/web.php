@@ -39,6 +39,7 @@ use App\Controllers\HomeController;
 use App\Controllers\UsuarioController;
 use App\Controllers\SalaController;
 use App\Controllers\AsientoController;
+use App\Controllers\EntradaController;
 
 // Indicaremos la clase del controlador y el método a ejecutar. Solo algunas rutas están implementadas
 // Tendremos rutas para get y pst, así como parámetros opcionales indicados con : que podrán
@@ -77,6 +78,7 @@ Route::get('/cine/:id', [SalaController::class, 'toSala']);
 // Asientos
 Route::get('/cine/:id/comprar', [HomeController::class, 'error']); // Redirige a error
 Route::post('/cine/:id/comprar', [AsientoController::class, 'comprarEntradas']);
+Route::post('/cine/:id/comprar/finalizar', [EntradaController::class, 'terminarCompra']);
 
 
 /*Route::get('/contacto', [ContactoController::class, 'index']);

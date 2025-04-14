@@ -990,8 +990,8 @@ a .dia-btn.seleccionado {
 }
 
 .asiento-label input:disabled + .asiento-btn {
-  background: #6c757d;
-  color: white;
+  background: #bfc6cc;
+  color: rgb(255, 255, 255);
   cursor: not-allowed;
   opacity: 0.7;
   position: relative;
@@ -1004,8 +1004,8 @@ a .dia-btn.seleccionado {
   left: 50%;
   width: 80%;
   height: 2px;
-  background: #dc3545;
-  transform: translate(-50%, -50%) rotate(-45deg);
+  /*background: #dc3545;
+  transform: translate(-50%, -50%) rotate(-45deg);*/
 }
 
 .indicador-pantalla {
