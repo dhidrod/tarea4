@@ -8,6 +8,7 @@ namespace App\Models;
  * usuarios.
  */
 
+
 class Model
 {
     protected $db_host = 'localhost';
@@ -25,9 +26,23 @@ class Model
 
     protected $table; // Definido en la clase hijo
 
-    public function __construct()  // Se puede modificar según montéis la conexión
+    protected $ownConnection = true; // Si se quiere usar la conexión de otro modelo, se puede cambiar a false
+
+    public function __construct($existingConnection = null)
     {
-        $this->connection();
+        if ($existingConnection) {
+            $this->connection = $existingConnection;
+            $this->ownConnection = false;
+        } else {
+            $this->connection();
+            $this->ownConnection = true;
+        }
+    }
+
+    
+    public function getConnection()
+    {
+        return $this->connection;
     }
 
     public function connection()
@@ -52,12 +67,32 @@ class Model
             $this->connection->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
             // echo 'Salida (fuera del catch): ';
+            // Return the PDO connection to allow rollback in the controller
+           // return $this->connection;
 
         } catch (\PDOException $e) {
             echo 'Error de conexión: ' . $e->getMessage();
             die();
         }
     }
+
+
+
+    public function beginTransaction()
+    {
+        return $this->connection->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->connection->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->connection->rollBack();
+    }
+
 
     // QUERY BUILDER
     // Consultas: 
@@ -211,9 +246,10 @@ class Model
 
         $sql = "INSERT INTO {$this->table} ({$columns}) VALUES (?" . str_repeat(',?', count($values) - 1) . ")";
 
-        $this->query($sql, $values, $values);
+        /*$this->query($sql, $values, $values);
 
-        return $this;
+        return $this;*/
+        return $this->query($sql, $values, $values);
     }
 
     public function update($id, $data)
@@ -236,8 +272,9 @@ class Model
         }
         $values[] = $id;
 
-        $this->query($sql, $values);
-        return $this;
+        /*$this->query($sql, $values);
+        return $this;*/
+        return $this->query($sql, $values);
     }
 
     public function delete($id)
@@ -250,7 +287,9 @@ class Model
         }
         $values = [$id]; // Inicializamos $values como un array con el id
 
-        $this->query($sql, $values);
+        //$this->query($sql, $values);
+
+        return $this->query($sql, $values);
     }
 
     // Para pruebas, devuelve como si fuese unan consulta, borrar
