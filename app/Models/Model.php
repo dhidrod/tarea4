@@ -244,7 +244,13 @@ class Model
     {
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
 
-        $this->query($sql, [$id], 'i');
+        // Esto es nuevo, intenta arreglar un bug donde no se pasaba el id si no un array con el id dentro
+        if (is_array($id)) {
+            $id = reset($id); // Obtiene el primer valor del array
+        }
+        $values = [$id]; // Inicializamos $values como un array con el id
+
+        $this->query($sql, $values);
     }
 
     // Para pruebas, devuelve como si fuese unan consulta, borrar

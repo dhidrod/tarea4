@@ -175,6 +175,15 @@ class EntradaController extends Controller
         
     }
 
+    public function updateEntradas(): void {
+        $entradaModel = new EntradaModel();
+        $fecha_actual = date('Y-m-d');
+        $entradas = $entradaModel->all()->where('fecha_exp', '<' , $fecha_actual)->get();
+        foreach ($entradas as $entrada) {
+            $entradaModel->delete(['id' => $entrada['id']]);
+        }
+    }
+
     
 
 

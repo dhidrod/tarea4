@@ -2,6 +2,14 @@
 
 use app\Models\SalaModel;
 use app\Controllers\AsientoController;
+use app\Controllers\EntradaController;
+
+// Creamos una cookie para evitar que se actualicen las entradas cada vez que se carga la página
+if (!isset($_COOKIE['entradasActualizadas'])) {
+    setcookie('entradasActualizadas', '1', time() + 60);
+    $EntradaController = new EntradaController();
+    $EntradaController->updateEntradas();
+}
 
 // Configuración regional para fechas en español
 setlocale(LC_TIME, 'es_ES.utf8');
