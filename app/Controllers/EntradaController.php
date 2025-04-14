@@ -158,12 +158,19 @@ class EntradaController extends Controller
             $saldoCine = $cineModel->select('saldo')->where('id', 1)->get();
             $nuevoSaldo = $saldoCine[0]['saldo'] + $_POST['precio_total'];
             $cineModel->update(['id' => 1], ['saldo' => $nuevoSaldo]);
+
+            $AsientoModel = new AsientoModel();
             // Ahora creamos la entrada en la base de datos. Por cada asiento creamos una entrada.
             foreach ($_POST["asientos"] as $asientosPorId) {
+                // Busca la id del asiento
+                $idAsiento = $AsientoModel->select('id')->where('sala_id', $_POST['sala_id'])->where('posicion', $asientosPorId)->get();
+                $asientosPorId = $idAsiento[0]['id'];
+                $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
+                // Creamos un array con todos los datos para la entrada
                 $entrada = [
                     'usuario_id' => $_SESSION['user_id'],
                     'asiento_id' => $asientosPorId,
-                    'precio_compra' => $_POST['precio_total'],
+                    'precio_compra' => $precioAsiento[0]['precio'],
                     'fecha_exp' => $_POST["fecha_seleccionada"]
                 ];
                 $EntradaModel->create($entrada);
