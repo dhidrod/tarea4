@@ -50,7 +50,7 @@ if (!isset($salas) || !empty($salas)){
                     <tr>
                         <?php for ($i = 0; $i <= array_key_last($salas['asiento']); $i++): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($salas['id']); ?></td>
+                        <td><?php echo htmlspecialchars($salas['id'][$i]); ?></td>
                         <td><?php echo htmlspecialchars($salas['asiento'][$i]); ?></td>
                         <td><?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?></td>
                         <td><?php echo htmlspecialchars($salas['precio'][$i]); ?></td>
@@ -65,18 +65,21 @@ if (!isset($salas) || !empty($salas)){
             </table>
         </div>
         
-        <form action="/cine/<?php echo htmlspecialchars($salas['id']); ?>/comprar/finalizar" method="post">
+        <form action="/cine/comprar/finalizar" method="post">
             <?php foreach ($salas['asiento'] as $asiento): ?>
                 <input type="hidden" name="asientos[]" value="<?php echo htmlspecialchars($asiento); ?>">
             <?php endforeach; ?>
-            <input type="hidden" name="sala_id" value="<?php echo htmlspecialchars($salas['id']); ?>">
+            <?php foreach ($salas['id'] as $id): ?>
+                <input type="hidden" name="sala_id[]" value="<?php echo htmlspecialchars($id); ?>">
+            <?php endforeach; ?>
+            <!--<input type="hidden" name="sala_id" value="<?php //echo htmlspecialchars($salas['id']); ?>">-->
             <input type="hidden" name="fecha_seleccionada" value="<?php echo htmlspecialchars($_POST['fecha_seleccionada']); ?>">
             <input type="hidden" name="precio_total" value="<?php echo htmlspecialchars(array_sum($salas['precio'])); ?>">
             <button type="submit" class="btn-primario">Pagar</button>
         </form>
 
         <!-- <a href="/cine/<?php //echo htmlspecialchars($salas['id']); ?>/comprar">Completar</a> -->
-        <a href="/cine/<?php echo htmlspecialchars($salas['id']); ?>">Volver a la sala</a>
+        <a href="/cine">Volver a la sala</a>
 
 
     </div>

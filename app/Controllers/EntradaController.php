@@ -192,9 +192,10 @@ class EntradaController extends Controller
 
                 //$AsientoModel = new AsientoModel();
                 // Ahora creamos la entrada en la base de datos. Por cada asiento creamos una entrada.
+                $i = 0;
                 foreach ($_POST["asientos"] as $asientosPorId) {
                     // Busca la id del asiento
-                    $idAsiento = $AsientoModel->select('id')->where('sala_id', $_POST['sala_id'])->where('posicion', $asientosPorId)->get();
+                    $idAsiento = $AsientoModel->select('id')->where('sala_id', $_POST['sala_id'][$i])->where('posicion', $asientosPorId)->get();
                     $asientosPorId = $idAsiento[0]['id'];
                     $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
                     // Creamos un array con todos los datos para la entrada
@@ -205,6 +206,7 @@ class EntradaController extends Controller
                         'fecha_exp' => $_POST["fecha_seleccionada"]
                     ];
                     $result = $EntradaModel->create($entrada);
+                    $i++;
                 }
                 // Si la entrada se ha creado correctamente, actualizamos el asiento como vendido
                 if (!$result) {
@@ -219,7 +221,8 @@ class EntradaController extends Controller
                 // Si hay un error, se hace un rollback y se redirige a la vista de error
                 $_SESSION["error"] = "Error al realizar la compra: " . $e->getMessage();
                 $connection->rollback();
-                return $this->redirect('/cine/' . $_POST['sala_id']);
+                //return $this->redirect('/cine/' . $_POST['sala_id']);
+                return $this->redirect('/cine');
             }
         }
     }

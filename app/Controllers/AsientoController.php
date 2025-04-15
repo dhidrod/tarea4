@@ -98,7 +98,7 @@ class AsientoController extends Controller
         return $this->redirect('/admin/' . $asiento['sala_id']);
     }
 
-    public function comprarEntradas($id)
+    public function comprarEntradas()
     {
         if (!isset($_SESSION['user_id'])) {
             $_SESSION["error"] = "Debes iniciar sesión primero";
@@ -107,7 +107,7 @@ class AsientoController extends Controller
 
         if(!isset($_POST["asientos"])) {
             $_SESSION["error"] = "No has seleccionado asientos";
-            return $this->redirect('/cine/'.$id);
+            return $this->redirect('/cine');
         }
         
         $AsientoModel = new AsientoModel();
@@ -117,12 +117,14 @@ class AsientoController extends Controller
                 $asiento = $AsientoModel->all()->where('sala_id', $id)->where('posicion', $valor)->get();
                 $posicion[] = $asiento[0]['posicion'];
                 $precio[] = $asiento[0]['precio'];
+                $salaid[] = $asiento[0]['sala_id'];
                 $salas['asiento'] = $posicion;
                 $salas['precio'] = $precio;
+                $salas['id'] = $salaid;
             }
         }
 
-        $salas['id'] = $id;
+        
         return $this->view('cine.resumen',['salas' => $salas]);
 
         //echo "array: " .  $_POST["asientos"][$id][0]; //$_POST["asientos"][0][0]

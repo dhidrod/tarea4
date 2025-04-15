@@ -67,7 +67,10 @@ class SalaController extends Controller
     }
 
    
-    public function toSala($id){
+    public function toSala(){
+        
+        $id = isset($_GET['p']) ? $_GET['p'] : 1;
+        
         if (!isset($_SESSION['user_id'])) {
             $_SESSION["error"] = "Debes iniciar sesión primero";
             return $this->redirect('/');
