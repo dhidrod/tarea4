@@ -66,7 +66,7 @@ if (!isset($salas) || !empty($salas)){
                     <label for="capacidad">Capacidad:</label>
                     <input type="number" id="capacidad" name="capacidad">
                 </div>
-                <input type="submit" name="login" value="Añadir Sala">
+                <input type="submit" name="addsala" value="Añadir Sala">
             </form>
 
         <?php else: ?>

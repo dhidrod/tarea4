@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\SalaModel;
+use App\Models\AsientoModel;
 
 class SalaController extends Controller
 {
@@ -20,6 +21,8 @@ class SalaController extends Controller
     public function addSala()
     {
         $SalaModel = new SalaModel();
+        $connection = $SalaModel->getConnection();
+
 
         if ($this->validarDato($_POST["nombre"], 'nombre') == false) {
             $_SESSION["error"] = "El nombre de la sala no tiene un formato válido<br>";     
@@ -31,10 +34,35 @@ class SalaController extends Controller
         if (isset($_SESSION["error"])) {
             return $this->redirect('/admin');
         }
+        $connection->beginTransaction();
 
+        try{
+        // Primero creamos la sala
         $data = ["nombre" => $_POST["nombre"], "capacidad" => $_POST["capacidad"]];
         $SalaModel->create($data);
+
+        // Luego creamos los asientos
+        $salaId = $connection->lastInsertId(); // Obtener el ID de la sala recién creada
+
+        $asientoModel = new AsientoModel($connection);
+        
+        for ($i = 1; $i <= $_POST["capacidad"]; $i++) {
+            $data = ["sala_id" => $salaId, "posicion" => $i, "precio" => 5];
+            $asientoModel->create($data);
+        }
+
+        } catch (\Exception $e) {
+            $connection->rollBack(); // Deshacer la transacción en caso de error
+
+            $_SESSION["error"] = "Error al crear la sala: " . $e->getMessage();
+
+            return $this->redirect('/admin');
+        }
+
+        $connection->commit();
+
         $_SESSION["success"] = "Sala creada correctamente";
+
         return $this->redirect('/admin');
     }
 
