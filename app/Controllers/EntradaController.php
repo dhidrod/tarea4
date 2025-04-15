@@ -214,7 +214,7 @@ class EntradaController extends Controller
                 // Redirigimos a la vista de compra realizada con éxito
                 $_SESSION["success"] = "Compra realizada con éxito";
                 $connection->commit();
-                return $this->redirect('/cine/' . $_POST['sala_id']);
+                return $this->redirect('/cine');
             } catch (\Exception $e) {
                 // Si hay un error, se hace un rollback y se redirige a la vista de error
                 $_SESSION["error"] = "Error al realizar la compra: " . $e->getMessage();
