@@ -99,7 +99,7 @@ class DataBaseModel extends Model
     public function setupDatabase($nombre = null)
     {
         if (!$nombre) {
-            $nombre = "tarea4recuperacion3";
+            $nombre = "tarea4recuperacion2";
         }
 
         // Primero, asegurarse de tener una conexión sin base de datos

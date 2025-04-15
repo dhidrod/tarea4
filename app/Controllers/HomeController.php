@@ -118,7 +118,7 @@ class HomeController extends Controller
     {
     
         $dbModel = new DataBaseModel();
-        $result = $dbModel->setupDatabase("tarea4recuperacion3");
+        $result = $dbModel->setupDatabase("tarea4recuperacion2");
         
         if ($result) {
             $_SESSION["success"] = "Base de datos creada correctamente";
