@@ -76,11 +76,11 @@ Route::get('/registro', [HomeController::class, 'toRegistro']);
 // Cine
 Route::get('/cine', [HomeController::class, 'toCine']);
 Route::get('/cine/:id', [SalaController::class, 'toSala']);
+
 // Asientos
 Route::get('/cine/:id/comprar', [HomeController::class, 'error']); // Redirige a error
 Route::post('/cine/:id/comprar', [AsientoController::class, 'comprarEntradas']);
 Route::post('/cine/:id/comprar/finalizar', [EntradaController::class, 'terminarCompra']);
-
 
 // Panel de administración
 Route::get('/admin', [HomeController::class, 'toAdmin']);

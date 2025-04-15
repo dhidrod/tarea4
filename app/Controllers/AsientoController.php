@@ -176,7 +176,7 @@ class AsientoController extends Controller
         //$fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
         // Verificar si hay resultados de fecha antes de acceder al índice
         if (!empty($fecha) && isset($fecha[0]['fecha_exp'])) {
-            if ($fecha[0]['fecha_exp'] >= $fechaSeleccionada) {
+            if ($fecha[0]['fecha_exp'] == $fechaSeleccionada) {
                 return true; // Asiento ocupado
             } else {
                 // Si la fecha de la entrada es menor a la fecha actual se considera libre
