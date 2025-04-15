@@ -41,10 +41,12 @@ use App\Controllers\SalaController;
 use App\Controllers\AsientoController;
 use App\Controllers\EntradaController;
 
-// Indicaremos la clase del controlador y el método a ejecutar. Solo algunas rutas están implementadas
-// Tendremos rutas para get y pst, así como parámetros opcionales indicados con : que podrán
-// ser recuperados por un mismo controlador. Por ejemplo, /curso/:variable y /curso/ruta1 usan el mismo controlador
-// y :variable se trata como un parámetro ajeno a la ruta
+// Crear Base de Datos
+
+Route::get('/database', [HomeController::class, 'makeDatabase']);
+
+// Usuarios
+
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/usuario/nuevo', [UsuarioController::class, 'create']);
 Route::get('/usuario', [UsuarioController::class, 'index']);
@@ -57,7 +59,6 @@ Route::get('/usuario/edit/:id', [UsuarioController::class, 'edit']);
 
 Route::post('/usuario/saldo/:id/subtractSaldo', [UsuarioController::class, 'subtractSaldo']);
 Route::post('/usuario/saldo/:id/addSaldo', [UsuarioController::class, 'addSaldo']);
-
 
 
 Route::get('/usuario/saldo/:id', [UsuarioController::class, 'toSaldo']);

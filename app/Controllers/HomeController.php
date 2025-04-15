@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\DataBaseModel;
 use App\Models\UsuarioModel; // Import the UsuarioModel class
 
 class HomeController extends Controller
@@ -18,7 +19,7 @@ class HomeController extends Controller
         return $this->redirect('/'); // Seleccionamos una vista (método padre)
     }
 
-// Usuario
+    // Usuario
 
     public function toRegistro()
     {
@@ -50,7 +51,7 @@ class HomeController extends Controller
         $this->redirect('/');
     }
 
-// Cine
+    // Cine
 
     public function toCine()
     {
@@ -62,18 +63,20 @@ class HomeController extends Controller
     }
 
 
-// Administración
+    // Administración
 
     public function toAdmin()
     {
         return $this->view('admin');
     }
 
-    public function toEditSala($id){
+    public function toEditSala($id)
+    {
         return $this->view('editsala', ['id' => $id]);
     }
 
-    public function toEditAsiento($id){
+    public function toEditAsiento($id)
+    {
         return $this->view('editasiento', ['id' => $id]);
     }
 
@@ -107,5 +110,23 @@ class HomeController extends Controller
 
         return true; // La sesión es válida y el usuario tiene permiso
 
+    }
+
+    // Base de datos
+
+    public function makeDatabase()
+    {
+    
+        $dbModel = new DataBaseModel();
+        $result = $dbModel->setupDatabase("tarea4recuperacion3");
+        
+        if ($result) {
+            $_SESSION["success"] = "Base de datos creada correctamente";
+        } else {
+            $_SESSION['error'] = "Hubo un error al crear la base de datos.";
+        }
+        
+        return $this->redirect('/');
+        
     }
 }

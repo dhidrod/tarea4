@@ -57,7 +57,14 @@ if (!isset($salas) || !empty($salas)){
                     </tbody>
                 </table>
             </div>
-            <form action="/admin/add" method="post">
+            
+
+        <?php else: ?>
+            <div class="error">
+                <p>No hay salas disponibles actualmente.</p>
+            </div>
+        <?php endif; ?>
+        <form action="/admin/add" method="post">
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>
                     <input type="text" id="nombre" name="nombre">
@@ -67,13 +74,7 @@ if (!isset($salas) || !empty($salas)){
                     <input type="number" id="capacidad" name="capacidad">
                 </div>
                 <input type="submit" name="addsala" value="Añadir Sala">
-            </form>
-
-        <?php else: ?>
-            <div class="error">
-                <p>No hay salas disponibles actualmente.</p>
-            </div>
-        <?php endif; ?>
+        </form>
     </div>
 
     <?php include_once __DIR__ . '/footer.php'; ?>

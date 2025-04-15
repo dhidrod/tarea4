@@ -51,12 +51,11 @@ if (isset($_POST['login'])) {
             ?>
         </div>
 
-        <div class="error">
+        <div class="success">
             <?php
-            if (isset($errors)) {
-                foreach ($errores as $clave => $valor) {
-                    echo "<br><p>" . $valor . "</p><br>";
-                }
+            if (isset($_SESSION['success'])) {
+                echo "<p>{$_SESSION['success']}</p>";
+                unset($_SESSION['success']);
             }
             ?>
         </div>
