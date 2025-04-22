@@ -1,7 +1,7 @@
 <header>
     <div class="headercontainer">
         <img class="logo" src="/images/logo.png" alt="Logo" style="max-width: 20%; height: auto;" />
-        <h1 class="titulo">AgendaFutbol</h1>
+        <h1 class="titulo">Cine</h1>
 
 
         <?php
