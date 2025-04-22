@@ -160,8 +160,6 @@ class EntradaController extends Controller
         $cineModel = new CineModel($connection);
         $AsientoModel = new AsientoModel($connection);
 
-        //$EntradaModel = new EntradaModel();
-        //$usuarioModel = new UsuarioModel();
         // Primero comprobamos el saldo del usuario, para ver si tiene dinero para comprar las entradas.
         // Si no tiene saldo, redirigir a la vista de saldo insuficiente
         $saldo = $usuarioModel->select('saldo')->where('id', $_SESSION['user_id'])->get();
@@ -198,14 +196,21 @@ class EntradaController extends Controller
                     $idAsiento = $AsientoModel->select('id')->where('sala_id', $_POST['sala_id'][$i])->where('posicion', $asientosPorId)->get();
                     $asientosPorId = $idAsiento[0]['id'];
                     $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
-                    // Creamos un array con todos los datos para la entrada
-                    $entrada = [
-                        'usuario_id' => $_SESSION['user_id'],
-                        'asiento_id' => $asientosPorId,
-                        'precio_compra' => $precioAsiento[0]['precio'],
-                        'fecha_exp' => $_POST["fecha_seleccionada"]
-                    ];
-                    $result = $EntradaModel->create($entrada);
+                    // Comprobamos si ya existe una entrada para este asiento y usuario
+                    $entradaYaExiste = $EntradaModel->select('id')->where('asiento_id', $asientosPorId)->where('usuario_id', $_SESSION['user_id'])->get();
+                    if (empty($entradaYaExiste)) {
+                        // Creamos un array con todos los datos para la entrada
+                        $entrada = [
+                            'usuario_id' => $_SESSION['user_id'],
+                            'asiento_id' => $asientosPorId,
+                            'precio_compra' => $precioAsiento[0]['precio'],
+                            'fecha_exp' => $_POST["fecha_seleccionada"]
+                        ];
+                        $result = $EntradaModel->create($entrada);
+                    } else {
+                        // Error
+                        throw new \Exception("Error al crear la entrada");
+                    }
                     $i++;
                 }
                 // Si la entrada se ha creado correctamente, actualizamos el asiento como vendido

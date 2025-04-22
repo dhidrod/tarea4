@@ -122,7 +122,7 @@
                                     for ($j = 0; $j < $asientos_por_fila; $j++) {
                                         if ($contador > $sala['capacidad']) break;
 
-                                        //$ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
+                                        // Obtener los asientos ocupados de la sala
                                         $ocupado = false;
                                         foreach ($asientosOcupados as $asientoOcupado) {
                                             if ($sala['id'] == $asientoOcupado['sala_id'] && $asientoOcupado['posicion'] == $contador) {
@@ -130,7 +130,7 @@
                                                 break;
                                             }
                                         }
-                                        //$ocupado = ($asientosOcupados[$i]['posicion'] == $contador) ? true : false; // Simulación de ocupación
+                            
                                         echo '<label class="asiento-label">';
                                         echo '<input type="checkbox" 
                                                    name="asientos[' . $sala['id'] . '][]" 
