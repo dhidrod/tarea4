@@ -31,7 +31,7 @@
                 <input type="date" name="fecha_nacimiento" id="fecha_nacimiento">
                 <input type="submit" value="Enviar">
 
-                <input type="submit" name="generarUsuarios" value="Crear 10 Usuarios Aleatorios">
+                <!--<input type="submit" name="generarUsuarios" value="Crear 10 Usuarios Aleatorios">-->
 
             </form>
             <div class="error">

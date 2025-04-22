@@ -151,7 +151,7 @@ class EntradaController extends Controller
 
         if (!$connection) {
             $_SESSION["error"] = "Error al conectar con la base de datos";
-            return $this->redirect('/cine/' . $_POST['sala_id']);
+            return $this->redirect('/cine');
         }
 
         // Creamos todos los modelos con la misma conexión
@@ -167,7 +167,7 @@ class EntradaController extends Controller
         $saldo = $usuarioModel->select('saldo')->where('id', $_SESSION['user_id'])->get();
         if ($saldo[0]['saldo'] < $_POST['precio_total']) {
             $_SESSION["error"] = "Saldo insuficiente para realizar la compra";
-            return $this->redirect('/cine/' . $_POST['sala_id']);
+            return $this->redirect('/cine');
         } else {
             try {
                 // Creamos un punto de rollback para que si hay un error, se pueda deshacer la transacción
