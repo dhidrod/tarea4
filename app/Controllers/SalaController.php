@@ -42,7 +42,7 @@ class SalaController extends Controller
             if ($_POST["capacidad"] < 1) {
                 throw new \Exception("La capacidad debe ser mayor que 0.");
             }
-            if ($_POST["capacidad"] > 10) {
+            if ($_POST["capacidad"] > 100) {
                 throw new \Exception("La capacidad no puede ser mayor que 100.");
             }
 

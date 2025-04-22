@@ -70,7 +70,7 @@ if (!isset($salas) || !empty($salas)){
                     <input type="text" id="nombre" name="nombre">
                 </div>
                 <div class="form-group">
-                    <label for="capacidad">Capacidad (entre 1 y 10):</label>
+                    <label for="capacidad">Capacidad (entre 1 y 100):</label>
                     <input type="number" id="capacidad" name="capacidad">
                 </div>
                 <input type="submit" name="addsala" value="Añadir Sala">
