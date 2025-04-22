@@ -38,6 +38,24 @@ class SalaController extends Controller
         $connection->beginTransaction();
 
         try {
+            // Validar capacidad
+            if ($_POST["capacidad"] < 1) {
+                throw new \Exception("La capacidad debe ser mayor que 0.");
+            }
+            if ($_POST["capacidad"] > 10) {
+                throw new \Exception("La capacidad no puede ser mayor que 100.");
+            }
+
+            // validar nombre
+            $nombre = filter_var($_POST["nombre"], FILTER_UNSAFE_RAW);
+            if (empty($nombre)) {
+                throw new \Exception("El nombre de la sala no puede estar vacío.");
+            }
+            if (strlen($nombre) > 50) {
+                throw new \Exception("El nombre de la sala no puede exceder los 50 caracteres.");
+            }
+
+
             // Primero creamos la sala
             $data = ["nombre" => $_POST["nombre"], "capacidad" => $_POST["capacidad"]];
             $SalaModel->create($data);
