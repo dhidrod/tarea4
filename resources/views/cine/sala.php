@@ -1,65 +1,3 @@
-<?php
-
-use app\Models\SalaModel;
-use app\Controllers\AsientoController;
-use app\Controllers\EntradaController;
-
-// Creamos una cookie para evitar que se actualicen las entradas cada vez que se carga la página
-if (!isset($_COOKIE['entradasActualizadas'])) {
-    setcookie('entradasActualizadas', '1', time() + 60);
-    $EntradaController = new EntradaController();
-    $EntradaController->updateEntradas();
-}
-
-// Configuración regional para fechas en español
-setlocale(LC_TIME, 'es_ES.utf8');
-
-// Cargar configuración de paginación desde archivo
-$configPaginacion = include __DIR__ . '/../../../config/paginacion.php';
-$elementosPorPagina = $configPaginacion['salas_por_pagina'] ?? 1; // Valor por defecto si no está configurado
-
-// Parámetros de fecha
-$mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('n');
-$año = isset($_GET['año']) ? (int)$_GET['año'] : date('Y');
-$diaSeleccionado = isset($_GET['dia']) ? (int)$_GET['dia'] : date('j');
-
-// Parámetro de paginación
-$paginaActual = isset($_GET['p']) ? (int)$_GET['p'] : 1;
-$paginaActual = max(1, $paginaActual);
-
-// Validación de parámetros de fecha
-$mes = max(1, min(12, $mes));
-$año = max(2020, min(2100, $año));
-$fechaActual = strtotime("$año-$mes-01");
-$diasEnMes = date('t', $fechaActual);
-$diaSeleccionado = max(1, min($diasEnMes, $diaSeleccionado));
-
-// Obtener datos de todas las salas
-$salaModel = new SalaModel();
-$todasLasSalas = $salaModel->all()->get();
-$totalSalas = count($todasLasSalas);
-
-// Calcular total de páginas
-$totalPaginas = ceil($totalSalas / $elementosPorPagina);
-$paginaActual = min($paginaActual, max(1, $totalPaginas));
-
-// Obtener las salas para la página actual
-$indiceInicio = ($paginaActual - 1) * $elementosPorPagina;
-$salas = array_slice($todasLasSalas, $indiceInicio, $elementosPorPagina);
-
-if (!empty($salas)) {
-    $asientoController = new AsientoController();
-    $asientoController->setFechaSeleccionada($año, $mes, $diaSeleccionado);
-}
-
-// Fecha formateada
-$fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado"));
-
-// Función para generar URL de paginación
-function generarUrlPaginacion($pagina, $mes, $año, $dia) {
-    return "?p={$pagina}&mes={$mes}&año={$año}&dia={$dia}";
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <?php include_once __DIR__ . '/../head.php'; ?>
@@ -83,7 +21,7 @@ function generarUrlPaginacion($pagina, $mes, $año, $dia) {
             <?php
             if (isset($_SESSION['success'])) {
                 echo "<p>{$_SESSION['success']}</p>";
-                unset($_SESSION['success']); // Limpiar el mensaje de éxito después de mostrarlo
+                unset($_SESSION['success']);
             }
             ?>
         </div>
@@ -93,18 +31,18 @@ function generarUrlPaginacion($pagina, $mes, $año, $dia) {
             <div class="navegacion-salas">
                 <div class="controles-paginacion">
                     <?php if ($paginaActual > 1): ?>
-                        <a href="<?= generarUrlPaginacion($paginaActual - 1, $mes, $año, $diaSeleccionado) ?>" 
-                           class="btn-navegacion">&lt; Anterior</a>
+                        <a href="?p=<?= $paginaActual - 1 ?>&mes=<?= $mes ?>&año=<?= $año ?>&dia=<?= $diaSeleccionado ?>"
+                            class="btn-navegacion">&lt; Anterior</a>
                     <?php endif; ?>
 
                     <div class="paginacion-info">
                         Página <?= $paginaActual ?> de <?= $totalPaginas ?>
                         (Mostrando <?= count($salas) ?> de <?= $totalSalas ?> salas)
                     </div>
-                    
+
                     <?php if ($paginaActual < $totalPaginas): ?>
-                        <a href="<?= generarUrlPaginacion($paginaActual + 1, $mes, $año, $diaSeleccionado) ?>" 
-                           class="btn-navegacion">Siguiente &gt;</a>
+                        <a href="?p=<?= $paginaActual + 1 ?>&mes=<?= $mes ?>&año=<?= $año ?>&dia=<?= $diaSeleccionado ?>"
+                            class="btn-navegacion">Siguiente &gt;</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -113,8 +51,8 @@ function generarUrlPaginacion($pagina, $mes, $año, $dia) {
             <?php if ($totalPaginas > 1): ?>
                 <div class="selector-paginas">
                     <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-                        <a href="<?= generarUrlPaginacion($i, $mes, $año, $diaSeleccionado) ?>" 
-                           class="btn-pagina <?= ($i == $paginaActual) ? 'activa' : '' ?>">
+                        <a href="?p=<?= $i ?>&mes=<?= $mes ?>&año=<?= $año ?>&dia=<?= $diaSeleccionado ?>"
+                            class="btn-pagina <?= ($i == $paginaActual) ? 'activa' : '' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
@@ -184,7 +122,15 @@ function generarUrlPaginacion($pagina, $mes, $año, $dia) {
                                     for ($j = 0; $j < $asientos_por_fila; $j++) {
                                         if ($contador > $sala['capacidad']) break;
 
-                                        $ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
+                                        //$ocupado = $asientoController->isAsientoOcupado($sala['id'], $contador);
+                                        $ocupado = false;
+                                        foreach ($asientosOcupados as $asientoOcupado) {
+                                            if ($sala['id'] == $asientoOcupado['sala_id'] && $asientoOcupado['posicion'] == $contador) {
+                                                $ocupado = true;
+                                                break;
+                                            }
+                                        }
+                                        //$ocupado = ($asientosOcupados[$i]['posicion'] == $contador) ? true : false; // Simulación de ocupación
                                         echo '<label class="asiento-label">';
                                         echo '<input type="checkbox" 
                                                    name="asientos[' . $sala['id'] . '][]" 
@@ -214,77 +160,6 @@ function generarUrlPaginacion($pagina, $mes, $año, $dia) {
 
     <?php include_once __DIR__ . '/../footer.php'; ?>
 
-    <style>
-        .navegacion-salas {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-        }
-
-        .paginacion-info {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin: 0 15px;
-        }
-
-        .controles-paginacion {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .btn-navegacion {
-            padding: 6px 12px;
-            background-color: #4a90e2;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .btn-navegacion:hover {
-            background-color: #357ab8;
-        }
-
-        .selector-paginas {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 20px;
-        }
-
-        .btn-pagina {
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .btn-pagina.activa {
-            background-color: #4a90e2;
-            color: white;
-            border-color: #4a90e2;
-        }
-
-        .mensaje-info {
-            text-align: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            margin: 20px 0;
-            color: #6c757d;
-        }
-    </style>
 </body>
 
 </html>

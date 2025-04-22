@@ -1109,3 +1109,74 @@ a .dia-btn.seleccionado {
 .pelicula a:hover {
   background-color: #a93226;
 }
+
+
+.navegacion-salas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.paginacion-info {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0 15px;
+}
+
+.controles-paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-navegacion {
+  padding: 6px 12px;
+  background-color: #4a90e2;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  min-width: 100px;
+  text-align: center;
+}
+
+.btn-navegacion:hover {
+  background-color: #357ab8;
+}
+
+.selector-paginas {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.btn-pagina {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #333;
+}
+
+.btn-pagina.activa {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.mensaje-info {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  margin: 20px 0;
+  color: #6c757d;
+}

@@ -93,11 +93,22 @@ class SalaModel extends Model
         $result = $this->get();
         //$result = $this->find($id)->get();
         // Verificar si se encontró el usuario
-        if (!empty($result) && isset($result[$id-1])) {
-            return $result[$id-1]; // Devolver el usuario encontrado
+        if (!empty($result) && isset($result[$id - 1])) {
+            return $result[$id - 1]; // Devolver el usuario encontrado
         }
 
         return null; // Devolver null si no hay resultados
     }
+
+    public function paginate($limit, $offset)
+{
+   
+    $sql = "SELECT * FROM {$this->table} LIMIT $limit OFFSET $offset";
     
+    // Ejecutamos la consulta sin parámetros ya que los valores están en la consulta
+    $this->query($sql);
+    
+    // Devolvemos los resultados
+    return $this->getResults();
+}
 }
