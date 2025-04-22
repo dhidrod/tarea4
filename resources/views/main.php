@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>🎬 Cartelera de Cine</h1>
+    <h1>Cartelera de Cine</h1>
     <div class="cartelera">
 
       <!-- Película 1 -->

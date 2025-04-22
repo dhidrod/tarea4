@@ -9,7 +9,7 @@
     <div class="cuerpoformulario">
         <h1 class="centered">Registro de Usuarios</h1>
         <h2>
-            ¡Regístrate ahora y comienza a administrar tus partidos!
+            ¡Regístrate ahora!
         </h2>
         <div class="formulario">
             <form action="/usuario/create/add" method="post" enctype="multipart/form-data">
@@ -30,8 +30,6 @@
                 <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                 <input type="date" name="fecha_nacimiento" id="fecha_nacimiento">
                 <input type="submit" value="Enviar">
-
-                <!--<input type="submit" name="generarUsuarios" value="Crear 10 Usuarios Aleatorios">-->
 
             </form>
             <div class="error">
