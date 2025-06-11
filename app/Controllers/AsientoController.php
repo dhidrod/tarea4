@@ -127,9 +127,6 @@ class AsientoController extends Controller
         
         return $this->view('cine.resumen',['salas' => $salas]);
 
-        //echo "array: " .  $_POST["asientos"][$id][0]; //$_POST["asientos"][0][0]
-        //echo "array: " .  $_POST["asientos"][$id][1]; //$_POST["asientos"][0][1]
-        //echo "array: " .  $_POST["asientos"][$id][2]; //$_POST["asientos"][0][2]
     }
 
    

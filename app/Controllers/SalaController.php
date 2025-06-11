@@ -24,7 +24,6 @@ class SalaController extends Controller
         $SalaModel = new SalaModel();
         $connection = $SalaModel->getConnection();
 
-
         if ($this->validarDato($_POST["nombre"], 'nombre') == false) {
             $_SESSION["error"] = "El nombre de la sala no tiene un formato válido<br>";
         }
@@ -54,7 +53,6 @@ class SalaController extends Controller
             if (strlen($nombre) > 50) {
                 throw new \Exception("El nombre de la sala no puede exceder los 50 caracteres.");
             }
-
 
             // Primero creamos la sala
             $data = ["nombre" => $_POST["nombre"], "capacidad" => $_POST["capacidad"]];
@@ -115,98 +113,101 @@ class SalaController extends Controller
     }
 
     public function toSala()
-    {
-        // Check if user is logged in
-        if (!isset($_SESSION['user_id'])) {
-            $_SESSION["error"] = "Debes iniciar sesión primero";
-            return $this->redirect('/');
-        }
-
-        // Update entries with cookie check
-        if (!isset($_COOKIE['entradasActualizadas'])) {
-            setcookie('entradasActualizadas', '1', time() + 60);
-            $entradaController = new EntradaController();
-            $entradaController->updateEntradas();
-        }
-
-        // Configure regional settings for Spanish dates
-        setlocale(LC_TIME, 'es_ES.utf8');
-
-        // Get pagination configuration
-        $configPaginacion = include __DIR__ . '/../../config/paginacion.php';
-        $elementosPorPagina = $configPaginacion['salas_por_pagina'] ?? 1;
-
-        // Get and validate date parameters
-        $mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('n');
-        $año = isset($_GET['año']) ? (int)$_GET['año'] : date('Y');
-        $diaSeleccionado = isset($_GET['dia']) ? (int)$_GET['dia'] : date('j');
-
-        // Validate date parameters
-        $mes = max(1, min(12, $mes));
-        $año = max(2020, min(2100, $año));
-        $fechaActual = strtotime("$año-$mes-01");
-        $diasEnMes = date('t', $fechaActual);
-        $diaSeleccionado = max(1, min($diasEnMes, $diaSeleccionado));
-
-        // Get pagination parameter
-        $paginaActual = isset($_GET['p']) ? (int)$_GET['p'] : 1;
-        $paginaActual = max(1, $paginaActual);
-
-        // Create model and get total count
-        $salaModel = new SalaModel();
-        $totalSalas = count($salaModel->all()->get());
-
-        // Calculate pagination
-        $totalPaginas = ceil($totalSalas / $elementosPorPagina);
-        $paginaActual = min($paginaActual, max(1, $totalPaginas));
-
-        // Get only the needed salas for current page
-        $offset = ($paginaActual - 1) * $elementosPorPagina;
-        $salas = $salaModel->paginate($elementosPorPagina, $offset);
-
-        // Setup AsientoController if we have rooms
-        $asientoController = null;
-        if (!empty($salas)) {
-            $asientoController = new AsientoController();
-            $asientoController->setFechaSeleccionada($año, $mes, $diaSeleccionado);
-        }
-
-        // Format selected date
-        $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado"));
-
-        // Create data array to pass to view
-        $data = [
-            'salas' => $salas,
-            'asientoController' => $asientoController,
-            'paginaActual' => $paginaActual,
-            'totalPaginas' => $totalPaginas,
-            'totalSalas' => $totalSalas,
-            'elementosPorPagina' => $elementosPorPagina,
-            'mes' => $mes,
-            'año' => $año,
-            'diaSeleccionado' => $diaSeleccionado,
-            'fechaSeleccionada' => $fechaSeleccionada,
-            'fechaActual' => $fechaActual,
-            'diasEnMes' => $diasEnMes
-        ];
-        // vamos a crear un array con todos los asientos ocupados que existan en la base de datos, para ello vamos a buscar en la table entradas y vamos a asignar los asientos
-
-        $entradaModel = new EntradaModel();
-        $entradas = $entradaModel->all()->get(); 
-        $asientosOcupados = [];
-        
-        $asientoModel = new AsientoModel();
-        foreach ($entradas as $entrada) {
-            $asiento = $asientoModel->all()->where('id', '=', $entrada['asiento_id'])->get();
-            if ($asiento) {
-                $asientosOcupados[] = [
-                    'sala_id' => $asiento[0]['sala_id'],
-                    'posicion' => $asiento[0]['posicion']
-                ];
-            }
-        }
-        // Añadimos los asientos ocupados al array de datos para la vista
-        $data['asientosOcupados'] = $asientosOcupados;
-        return $this->view('cine.sala', $data);
+{
+    // Verificar si el usuario ha iniciado sesión
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION["error"] = "Debes iniciar sesión primero";
+        return $this->redirect('/');
     }
+
+    // Actualizar entradas si no se ha hecho recientemente (verificado con una cookie)
+    if (!isset($_COOKIE['entradasActualizadas'])) {
+        setcookie('entradasActualizadas', '1', time() + 60);
+        $entradaController = new EntradaController();
+        $entradaController->updateEntradas();
+    }
+
+    // Configurar la localización regional para fechas en español
+    setlocale(LC_TIME, 'es_ES.utf8');
+
+    // Obtener la configuración de paginación
+    $configPaginacion = include __DIR__ . '/../../config/paginacion.php';
+    $elementosPorPagina = $configPaginacion['salas_por_pagina'] ?? 1;
+
+    // Obtener y validar los parámetros de fecha
+    $mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('n');
+    $año = isset($_GET['año']) ? (int)$_GET['año'] : date('Y');
+    $diaSeleccionado = isset($_GET['dia']) ? (int)$_GET['dia'] : date('j');
+
+    // Validar que los parámetros de fecha estén dentro de rangos aceptables
+    $mes = max(1, min(12, $mes));
+    $año = max(2020, min(2100, $año));
+    $fechaActual = strtotime("$año-$mes-01");
+    $diasEnMes = date('t', $fechaActual);
+    $diaSeleccionado = max(1, min($diasEnMes, $diaSeleccionado));
+
+    // Obtener y validar el parámetro de paginación
+    $paginaActual = isset($_GET['p']) ? (int)$_GET['p'] : 1;
+    $paginaActual = max(1, $paginaActual);
+
+    // Crear el modelo y contar el total de salas
+    $salaModel = new SalaModel();
+    $totalSalas = count($salaModel->all()->get());
+
+    // Calcular los valores para la paginación
+    $totalPaginas = ceil($totalSalas / $elementosPorPagina);
+    $paginaActual = min($paginaActual, max(1, $totalPaginas));
+
+    // Obtener solo las salas necesarias para la página actual
+    $offset = ($paginaActual - 1) * $elementosPorPagina;
+    $salas = $salaModel->paginate($elementosPorPagina, $offset);
+
+    // Configurar el controlador de asientos si hay salas disponibles
+    $asientoController = null;
+    if (!empty($salas)) {
+        $asientoController = new AsientoController();
+        $asientoController->setFechaSeleccionada($año, $mes, $diaSeleccionado);
+    }
+
+    // Formatear la fecha seleccionada para mostrarla
+    $fechaSeleccionada = strftime('%d/%B/%Y', strtotime("$año-$mes-$diaSeleccionado"));
+
+    // Crear un array con los datos que se enviarán a la vista
+    $data = [
+        'salas' => $salas,
+        'asientoController' => $asientoController,
+        'paginaActual' => $paginaActual,
+        'totalPaginas' => $totalPaginas,
+        'totalSalas' => $totalSalas,
+        'elementosPorPagina' => $elementosPorPagina,
+        'mes' => $mes,
+        'año' => $año,
+        'diaSeleccionado' => $diaSeleccionado,
+        'fechaSeleccionada' => $fechaSeleccionada,
+        'fechaActual' => $fechaActual,
+        'diasEnMes' => $diasEnMes
+    ];
+
+    // Crear un array con todos los asientos ocupados existentes en la base de datos.
+    // Para ello, buscamos en la tabla entradas y asignamos los asientos correspondientes.
+    $entradaModel = new EntradaModel();
+    $entradas = $entradaModel->all()->get(); 
+    $asientosOcupados = [];
+    
+    $asientoModel = new AsientoModel();
+    foreach ($entradas as $entrada) {
+        $asiento = $asientoModel->all()->where('id', '=', $entrada['asiento_id'])->get();
+        if ($asiento) {
+            $asientosOcupados[] = [
+                'sala_id' => $asiento[0]['sala_id'],
+                'posicion' => $asiento[0]['posicion']
+            ];
+        }
+    }
+
+    // Añadir los asientos ocupados al array de datos que se enviará a la vista
+    $data['asientosOcupados'] = $asientosOcupados;
+    return $this->view('cine.sala', $data);
+}
+
 }

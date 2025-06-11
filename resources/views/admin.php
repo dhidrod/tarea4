@@ -1,11 +1,3 @@
-<?php
-use app\Models\SalaModel;
-
-if (!isset($salas) || !empty($salas)){
-    $salaModel = new SalaModel();
-    $salas = $salaModel->all()->get();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once __DIR__ . '/head.php'; ?>

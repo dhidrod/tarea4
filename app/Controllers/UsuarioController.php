@@ -164,7 +164,7 @@ class UsuarioController extends Controller
     public function addUser()
     {
 
-        // Guardar datos del formulario en sesión (para recuperarlos en caso de error)
+        // Guardar datos del formulario en sesión
         $_SESSION['form_data'] = $_POST;
 
         // Se instancia el modelo

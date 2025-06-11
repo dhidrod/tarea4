@@ -93,12 +93,6 @@ Route::get('/admin/:id', [HomeController::class, 'toEditSala']);
 Route::post('/admin/:id/edit', [HomeController::class, 'toEditAsiento']);
 Route::post('/admin/:id/edit/update', [AsientoController::class, 'editarAsiento']);
 
-/*Route::get('/contacto', [ContactoController::class, 'index']);
-Route::get('/formulario', [FormularioController::class, 'index']);
-Route::get('/curso', [CursoController::class, 'index']);
-Route::get('/curso/ruta1', [CursoController::class, 'index']);
-Route::get('/curso/:variable', [CursoController::class, 'index']);
-Route::get('/otro/:variable1/:variable2/:variable3', [OtroController::class, 'index']);*/
  
 Route::dispatch();
 

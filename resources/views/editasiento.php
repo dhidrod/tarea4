@@ -1,14 +1,3 @@
-<?php
-
-use app\Models\AsientoModel;
-
-if (!isset($asientos) || !empty($asientos)) {
-    $AsientoModel = new AsientoModel();
-    for ($i = 0; $i <= array_key_last($_POST["asientos"][$id]); $i++) {
-        $asientos[$i] = $AsientoModel->all()->where('sala_id', '=', $id)->where('posicion', '=', $_POST["asientos"][$id][$i])->orderBy('id')->get();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once __DIR__ . '/head.php'; ?>

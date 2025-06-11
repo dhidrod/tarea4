@@ -188,7 +188,6 @@ class EntradaController extends Controller
                     throw new \Exception("Error al transferir el saldo al cine");
                 }
 
-                //$AsientoModel = new AsientoModel();
                 // Ahora creamos la entrada en la base de datos. Por cada asiento creamos una entrada.
                 $i = 0;
                 foreach ($_POST["asientos"] as $asientosPorId) {

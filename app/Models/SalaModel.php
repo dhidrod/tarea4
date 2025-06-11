@@ -20,14 +20,14 @@ class SalaModel extends Model
 
 
     public function paginate($limit, $offset)
-{
-   
-    $sql = "SELECT * FROM {$this->table} LIMIT $limit OFFSET $offset";
-    
-    // Ejecutamos la consulta sin parámetros ya que los valores están en la consulta
-    $this->query($sql);
-    
-    // Devolvemos los resultados
-    return $this->getResults();
-}
+    {
+
+        $sql = "SELECT * FROM {$this->table} LIMIT $limit OFFSET $offset";
+
+        // Ejecutamos la consulta sin parámetros ya que los valores están en la consulta
+        $this->query($sql);
+
+        // Devolvemos los resultados
+        return $this->getResults();
+    }
 }

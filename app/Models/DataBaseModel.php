@@ -99,10 +99,10 @@ class DataBaseModel extends Model
     public function setupDatabase($nombre = null)
     {
         if (!$nombre) {
-            $nombre = "tarea4recuperacion2";
+            $nombre = "tarea4recuperacion22";
         }
 
-        // Primero, asegurarse de tener una conexión sin base de datos
+        // Primero, asegurarse de tener una conexión
         $dsn = "mysql:host={$this->db_host}";
         $connection = new \PDO($dsn, $this->db_user, $this->db_pass);
         $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
