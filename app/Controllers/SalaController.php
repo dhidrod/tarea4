@@ -186,12 +186,11 @@ class SalaController extends Controller
         'fechaSeleccionada' => $fechaSeleccionada,
         'fechaActual' => $fechaActual,
         'diasEnMes' => $diasEnMes
-    ];
-
-    // Crear un array con todos los asientos ocupados existentes en la base de datos.
+    ];    // Crear un array con los asientos ocupados para la fecha seleccionada.
     // Para ello, buscamos en la tabla entradas y asignamos los asientos correspondientes.
     $entradaModel = new EntradaModel();
-    $entradas = $entradaModel->all()->get(); 
+    $fechaSeleccionadaSQL = date('Y-m-d', strtotime("$año-$mes-$diaSeleccionado"));
+    $entradas = $entradaModel->all()->where('fecha_exp', '=', $fechaSeleccionadaSQL)->get(); 
     $asientosOcupados = [];
     
     $asientoModel = new AsientoModel();

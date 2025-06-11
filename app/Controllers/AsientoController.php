@@ -154,16 +154,18 @@ class AsientoController extends Controller
         //$AsientoModel->update(['id' => 1], ['nombre' => 'NombreCambiado']);
 
         echo "Pruebas SQL Query Builder";
-    }
-
-    public function isAsientoOcupado($salaId, $asientoPosicion)
+    }    public function isAsientoOcupado($salaId, $asientoPosicion)
     {
         $AsientoModel = new AsientoModel();
         $asiento = $AsientoModel->all()->where('sala_id', $salaId)->where('posicion', $asientoPosicion)->get();
         
-        new EntradaModel();
+        // Si no hay asiento, no puede estar ocupado
+        if (empty($asiento)) {
+            return false;
+        }
+        
         $EntradaModel = new EntradaModel();
-        $fecha = $EntradaModel->select('fecha_exp')->where('asiento_id', $asiento[0]['id'])->get();
+        
         // Obtener la fecha seleccionada desde la URL
         if (!isset($_GET['año']) || !isset($_GET['mes']) || !isset($_GET['dia'])) {
             // Obtiene la fecha actual
@@ -172,17 +174,15 @@ class AsientoController extends Controller
             // Formatear la fecha seleccionada
             $fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
         }
-        //$fechaSeleccionada = date('Y-m-d', strtotime($_GET['año'] . '-' . $_GET['mes'] . '-' . $_GET['dia']));
-        // Verificar si hay resultados de fecha antes de acceder al índice
-        if (!empty($fecha) && isset($fecha[0]['fecha_exp'])) {
-            if ($fecha[0]['fecha_exp'] == $fechaSeleccionada) {
-                return true; // Asiento ocupado
-            } else {
-                // Si la fecha de la entrada es menor a la fecha actual se considera libre
-                return false; // Asiento libre
-            }
-        }
-
+        
+        // Buscar entradas para este asiento y fecha específica
+        $entrada = $EntradaModel->select('id')
+                              ->where('asiento_id', $asiento[0]['id'])
+                              ->where('fecha_exp', $fechaSeleccionada)
+                              ->get();
+        
+        // Si hay entrada para esta fecha, el asiento está ocupado
+        return !empty($entrada);
     }
 
 

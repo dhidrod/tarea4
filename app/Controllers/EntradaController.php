@@ -193,10 +193,12 @@ class EntradaController extends Controller
                 foreach ($_POST["asientos"] as $asientosPorId) {
                     // Busca la id del asiento
                     $idAsiento = $AsientoModel->select('id')->where('sala_id', $_POST['sala_id'][$i])->where('posicion', $asientosPorId)->get();
-                    $asientosPorId = $idAsiento[0]['id'];
-                    $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
-                    // Comprobamos si ya existe una entrada para este asiento y usuario
-                    $entradaYaExiste = $EntradaModel->select('id')->where('asiento_id', $asientosPorId)->where('usuario_id', $_SESSION['user_id'])->get();
+                    $asientosPorId = $idAsiento[0]['id'];                    $precioAsiento = $AsientoModel->select('precio')->where('id', $asientosPorId)->get();
+                    // Comprobamos si ya existe una entrada para este asiento y fecha
+                    $entradaYaExiste = $EntradaModel->select('id')
+                                                   ->where('asiento_id', $asientosPorId)
+                                                   ->where('fecha_exp', $_POST["fecha_seleccionada"])
+                                                   ->get();
                     if (empty($entradaYaExiste)) {
                         // Creamos un array con todos los datos para la entrada
                         $entrada = [
@@ -205,10 +207,9 @@ class EntradaController extends Controller
                             'precio_compra' => $precioAsiento[0]['precio'],
                             'fecha_exp' => $_POST["fecha_seleccionada"]
                         ];
-                        $result = $EntradaModel->create($entrada);
-                    } else {
-                        // Error
-                        throw new \Exception("Error al crear la entrada");
+                        $result = $EntradaModel->create($entrada);                    } else {
+                        // Error - el asiento ya está ocupado para esa fecha
+                        throw new \Exception("El asiento ya está ocupado para la fecha seleccionada");
                     }
                     $i++;
                 }
@@ -229,12 +230,11 @@ class EntradaController extends Controller
                 return $this->redirect('/cine');
             }
         }
-    }
-
-    public function updateEntradas(): void
+    }    public function updateEntradas(): void
     {
         $entradaModel = new EntradaModel();
         $fecha_actual = date('Y-m-d');
+        // Eliminamos las entradas cuya fecha de expiración sea anterior a la fecha actual
         $entradas = $entradaModel->all()->where('fecha_exp', '<', $fecha_actual)->get();
         foreach ($entradas as $entrada) {
             $entradaModel->delete(['id' => $entrada['id']]);
